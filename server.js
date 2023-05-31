@@ -59,6 +59,7 @@ const postCategory = require("./routes/postCategory");
 const location = require("./routes/location");
 const siteIdentity = require("./routes/siteIdentity");
 const postManagement = require("./routes/postManagement");
+const subMenu = require("./routes/subMenu");
 
 // mount routers
 app.use("/api/V1/auth", auth);
@@ -82,6 +83,8 @@ app.use("/api/v1/post-category", postCategory);
 app.use("/api/v1/location", location);
 app.use("/api/v1/site-identity", siteIdentity);
 app.use("/api/v1/post-management", postManagement);
+app.use("/api/v1/sub-menu", subMenu);
+
 
 const PORT = process.env.PORT || 8050;
 app.listen(PORT, console.log(`port is running ${PORT}`));

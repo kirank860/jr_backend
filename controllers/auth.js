@@ -29,7 +29,7 @@ const getMenu = async (role) => {
 
 // Get token from model, create cookie and send response
 const sendTokenResponse = async (user, res) => {
-  const { email, password, userType, _id } = user;
+  const { email, password, userRole, _id } = user;
   const token = user.getSignedJwtToken();
   if (!token) {
     res.status(200).json({
@@ -37,7 +37,7 @@ const sendTokenResponse = async (user, res) => {
       message: "Something went wrong!",
     });
   } else {
-    const menu = await getMenu(userType);
+    const menu = await getMenu(userRole);
     res.status(200).json({
       user,
       menu,
