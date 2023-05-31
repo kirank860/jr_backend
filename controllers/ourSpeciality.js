@@ -6,7 +6,7 @@ const allowed_file_size = 2;
 const DIR = "./uploads/ourspeciality";
 const imageType = "image";
 
-// @desc      create Our Speciality
+// @desc      CREATE OUR SPECIALITY
 // @route     POST /api/v1/our-speciality
 // @access    public
 exports.createOurSpeciality = async (req, res, next) => {
@@ -28,7 +28,7 @@ exports.createOurSpeciality = async (req, res, next) => {
         subTitle: req.body.subTitle,
         description: req.body.description,
         image: url + "/images/" + req.file.filename,
-        // franchise: req.body.franchise,
+        franchise: req.body.franchise,
       };
 
       if (req.file.size / (1024 * 1024) > allowed_file_size) {
@@ -57,17 +57,17 @@ exports.createOurSpeciality = async (req, res, next) => {
 };
 
 
-// @desc      get Our Speciality
+// @desc      GET OUR SPECIALITY
 // @route     GET /api/v1/our-speciality
 // @access    public
 exports.getOurSpeciality = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
     if (id && mongoose.isValidObjectId(id)) {
-      const response = await OurSpeciality.findById(id);
+      const response = await OurSpeciality.findById(id).populate("franchise");
       return res.status(200).json({
         success: true,
-        message: `retrieved specific Our specialities`,
+        message: `Retrieved specific our speciality`,
         response,
       });
     }
@@ -78,12 +78,13 @@ exports.getOurSpeciality = async (req, res) => {
       parseInt(skip) === 0 && OurSpeciality.countDocuments(),
       parseInt(skip) === 0 && OurSpeciality.countDocuments(query),
       OurSpeciality.find(query)
+        .populate("franchise")
         .skip(parseInt(skip) || 0)
-        .limit(parseInt(limit) || 10),
+        .limit(parseInt(limit) || 50),
     ]);
     res.status(200).json({
       success: true,
-      message: `retrieved all Our specialities`,
+      message: `Retrieved all our speciality`,
       response: data,
       count: data.length,
       totalCount: totalCount || 0,
@@ -98,7 +99,7 @@ exports.getOurSpeciality = async (req, res) => {
   }
 };
 
-// @desc      update Our Speciality
+// @desc      UPDATE OUR SPECIALITY
 // @route     PUT /api/v1/our-speciality
 // @access    public
 exports.updateOurSpeciality = async (req, res) => {
@@ -122,14 +123,14 @@ exports.updateOurSpeciality = async (req, res) => {
         });
       }
 
-      
+
 
       const updateFields = {
         title: body.title,
         subTitle: body.subTitle,
         description: body.description,
         image: file ? url + "/images/" + file.filename : undefined,
-        // franchise: body.franchise,
+        franchise: body.franchise,
       };
 
       if (file && file.size / (1024 * 1024) > allowed_file_size) {
@@ -142,7 +143,7 @@ exports.updateOurSpeciality = async (req, res) => {
       const response = await OurSpeciality.findByIdAndUpdate(id, updateFields);
 
       res.status(201).json({
-        message: "Successfully updated Our specialities",
+        message: "Successfully updated our speciality",
         data: response,
       });
     });
@@ -155,7 +156,7 @@ exports.updateOurSpeciality = async (req, res) => {
   }
 };
 
-// @desc      delete Our Speciality
+// @desc      DELETE OUR SPECIALITY
 // @route     DELETE /api/v1/our-speciality
 // @access    public
 exports.deleteOurSpeciality = async (req, res) => {
@@ -165,19 +166,41 @@ exports.deleteOurSpeciality = async (req, res) => {
     if (!ourSpeciality) {
       return res.status(404).json({
         success: false,
-        message: "Our specialities not found",
+        message: "Our speciality not found",
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Our specialities deleted successfully",
+      message: "Our speciality deleted successfully",
     });
   } catch (err) {
     console.log(err);
     res.status(400).json({
       success: false,
       message: err,
+    });
+  }
+};
+
+// @desc      GET BY FRANCHISE
+// @route     GET /api/v1/our-speciality/get-by-ourspeciality
+// @access    public
+exports.getByFranchise = async (req, res) => {
+  try {
+    const { id } = req.query;
+    const response = await OurSpeciality.find({ franchise: id });
+
+    res.status(201).json({
+      message: "Successfully retrieved",
+      data: response,
+    });
+
+  } catch (err) {
+    console.log("Error:", err);
+    res.status(500).json({
+      error: "Internal server error",
+      success: false,
     });
   }
 };

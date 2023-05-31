@@ -5,6 +5,7 @@ const {
   getTestimonial,
   updateTestimonial,
   deleteTestimonial,
+  getByFranchise,
 } = require("../controllers/testimonial");
 // Middleware
 const { protect, authorize } = require("../middleware/auth");
@@ -16,5 +17,7 @@ router
   .get(reqFilter, getTestimonial)
   .put(updateTestimonial)
   .delete(deleteTestimonial);
+
+router.get("/get-by-testimonial", getByFranchise);
 
 module.exports = router;

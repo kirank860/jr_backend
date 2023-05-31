@@ -1,14 +1,15 @@
 const mongoose = require("mongoose");
 
-const OurClientSchema = new mongoose.Schema(
+const PostCategorySchema = new mongoose.Schema(
   {
-    clientLogo: {
+    category: {
       type: String,
       required: true,
     },
-    clientUrl: {
-      type: String,
+    isActive: {
+      type: Boolean,
       required: true,
+      default: true,
     },
     franchise: {
       type: mongoose.Schema.Types.ObjectId,
@@ -18,4 +19,4 @@ const OurClientSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("ourClient", OurClientSchema);
+module.exports = mongoose.model("postCategory", PostCategorySchema);

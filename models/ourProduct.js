@@ -1,24 +1,20 @@
 const mongoose = require("mongoose");
 
-const FranchiseSchema = new mongoose.Schema(
+const OurProductSchema = new mongoose.Schema(
   {
+    productCategory: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "productCategory"
+    },
+    productSequence: {
+      type: String,
+      required: true,
+    },
+    productId: {
+      type: String,
+      required: true,
+    },
     name: {
-      type: String,
-      required: true,
-    },
-    location: {
-      type: String,
-      required: true,
-    },
-    website: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-    },
-    phone: {
       type: String,
       required: true,
     },
@@ -26,20 +22,36 @@ const FranchiseSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    logo: {
+    price: {
       type: String,
       required: true,
     },
-    primaryColour: {
+    offerPrice: {
       type: String,
       required: true,
     },
-    secondaryColour: {
+    image: {
       type: String,
       required: true,
+    },
+    brand: {
+      type: String,
+      required: true,
+    },
+    features: {
+      type: String,
+      required: true,
+    },
+    rating: {
+      type: String,
+      required: true,
+    },
+    franchise: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "franchise"
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("franchise", FranchiseSchema);
+module.exports = mongoose.model("ourProduct", OurProductSchema);

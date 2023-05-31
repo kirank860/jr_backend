@@ -1,15 +1,15 @@
 const { default: mongoose } = require("mongoose");
-const ContactUs = require("../models/contactUs");
+const OurProduct = require("../models/ourProduct");
 const upload = require("../middleware/multer");
 
 const allowed_file_size = 2;
-const DIR = "./uploads/contactus";
+const DIR = "./uploads/ourproduct";
 const imageType = "image";
 
-// @desc      CREATE CONTACT US
-// @route     POST /api/v1/contact-us
-// @access    public
-exports.createContactUs = async (req, res, next) => {
+// @desc      CREATE OUR PRODUCT
+// @route     POST /api/v1/our-product
+// @access    protect
+exports.createOurProduct = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
     multerUpload(req, res, async function (err) {
@@ -22,40 +22,40 @@ exports.createContactUs = async (req, res, next) => {
 
       const url = req.protocol + "://" + req.get("host");
 
-      // Create the Contact us object
-      const contactUs = {
-        title: req.body.title,
-        subTitle: req.body.subTitle,
+      // Create the OurProduct object
+      const ourproduct = {
+        productCategory: req.body.productCategory,
+        productSequence: req.body.productSequence,
+        productId: req.body.productId,
+        name: req.body.name,
         description: req.body.description,
+        price: req.body.price,
+        offerPrice: req.body.offerPrice,
         image: url + "/images/" + req.file.filename,
-        primaryAddress: req.body.primaryAddress,
-        secondaryAddress: req.body.secondaryAddress,
-        primaryPhone: req.body.primaryPhone,
-        secondaryPhone: req.body.secondaryPhone,
-        primaryEmail: req.body.primaryEmail,
-        secondaryEmail: req.body.secondaryEmail,
-        locationUrl: req.body.locationUrl,
+        brand: req.body.brand,
+        features: req.body.features,
+        rating: req.body.rating,
         franchise: req.body.franchise,
       };
 
       if (req.file.size / (1024 * 1024) > allowed_file_size) {
         return res.status(401).json({
           success: false,
-          message: "Image too large",
+          message: "Image file too large",
         });
       }
 
-      // Save the Contact us
-      const newContactUs = await ContactUs.create(contactUs);
+      // Save the OurProduct
+      const newOurProduct = await OurProduct.create(ourproduct);
 
       res.status(201).json({
         success: true,
-        message: "Contact us added successfully",
-        data: newContactUs,
+        message: "Our product created successfully",
+        data: newOurProduct,
       });
     });
   } catch (err) {
-    console.log("Error:", err);
+    console.log(err);
     res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -63,35 +63,37 @@ exports.createContactUs = async (req, res, next) => {
   }
 };
 
-
-// @desc      GET CONTACT US
-// @route     GET /api/v1/contact-us
-// @access    public
-exports.getContactUs = async (req, res) => {
+// @desc      GET OUR PRODUCT
+// @route     GET /api/v1/our-product/:id
+// @access    protect
+exports.getOurProduct = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
     if (id && mongoose.isValidObjectId(id)) {
-      const response = await ContactUs.findById(id).populate("franchise");
+      const response = await OurProduct.findById(id)
+        .populate("productCategory")
+        .populate("franchise");
       return res.status(200).json({
         success: true,
-        message: `Retrieved specific contact us`,
+        message: `Retrieved specific our product`,
         response,
       });
     }
     const query = searchkey
-      ? { ...req.filter, title: { $regex: searchkey, $options: "i" } }
+      ? { ...req.filter, price: { $regex: searchkey, $options: "i" } }
       : req.filter;
     const [totalCount, filterCount, data] = await Promise.all([
-      parseInt(skip) === 0 && ContactUs.countDocuments(),
-      parseInt(skip) === 0 && ContactUs.countDocuments(query),
-      ContactUs.find(query)
+      parseInt(skip) === 0 && OurProduct.countDocuments(),
+      parseInt(skip) === 0 && OurProduct.countDocuments(query),
+      OurProduct.find(query)
+        .populate("productCategory")
         .populate("franchise")
         .skip(parseInt(skip) || 0)
         .limit(parseInt(limit) || 50),
     ]);
     res.status(200).json({
       success: true,
-      message: `Retrieved all contact us`,
+      message: `Retrieved all our product`,
       response: data,
       count: data.length,
       totalCount: totalCount || 0,
@@ -106,10 +108,10 @@ exports.getContactUs = async (req, res) => {
   }
 };
 
-// @desc      UPDATE CONTACT US
-// @route     PUT /api/v1/contact-us
-// @access    public
-exports.updateContactUs = async (req, res) => {
+// @desc      UPDATE SPECIFIC OUR PRODUCT
+// @route     PUT /api/v1/our-product/:id
+// @access    protect
+exports.updateOurProduct = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
     multerUpload(req, res, async function (err) {
@@ -130,34 +132,32 @@ exports.updateContactUs = async (req, res) => {
         });
       }
 
-
-
       const updateFields = {
-        title: body.title,
-        subTitle: body.subTitle,
+        productCategory: body.productCategory,
+        productSequence: body.productSequence,
+        productId: body.productId,
+        name: body.name,
         description: body.description,
+        price: body.price,
+        offerPrice: body.offerPrice,
         image: file ? url + "/images/" + file.filename : undefined,
-        primaryAddress: body.primaryAddress,
-        secondaryAddress: body.secondaryAddress,
-        primaryPhone: body.primaryPhone,
-        secondaryPhone: body.secondaryPhone,
-        primaryEmail: body.primaryEmail,
-        secondaryEmail: body.secondaryEmail,
-        locationUrl: body.locationUrl,
+        brand: body.brand,
+        features: body.features,
+        rating: body.rating,
         franchise: body.franchise,
       };
 
-      if (file && file.size / (1024 * 1024) > allowed_file_size) {
+      if (file.size / (1024 * 1024) > allowed_file_size) {
         return res.status(401).json({
           success: false,
           message: "Image file too large",
         });
       }
 
-      const response = await ContactUs.findByIdAndUpdate(id, updateFields);
+      const response = await OurProduct.findByIdAndUpdate(id, updateFields);
 
       res.status(201).json({
-        message: "Successfully updated contact us",
+        message: "Successfully updated",
         data: response,
       });
     });
@@ -170,23 +170,23 @@ exports.updateContactUs = async (req, res) => {
   }
 };
 
-// @desc      DELETE CONTACT US
-// @route     DELETE /api/v1/contact-us
-// @access    public
-exports.deleteContactUs = async (req, res) => {
+// @desc      DELETE SPECIFIC OUR PRODUCT
+// @route     DELETE /api/v1/our-product/:id
+// @access    protect
+exports.deleteOurProduct = async (req, res) => {
   try {
-    const contactus = await ContactUs.findByIdAndDelete(req.query.id);
+    const ourproduct = await OurProduct.findByIdAndDelete(req.query.id);
 
-    if (!contactus) {
+    if (!ourproduct) {
       return res.status(404).json({
         success: false,
-        message: "Contact us not found",
+        message: "Our product not found",
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Contact us deleted successfully",
+      message: "Our product deleted successfully",
     });
   } catch (err) {
     console.log(err);
@@ -198,12 +198,12 @@ exports.deleteContactUs = async (req, res) => {
 };
 
 // @desc      GET BY FRANCHISE
-// @route     GET /api/v1/contact-us/get-by-contactus
+// @route     GET /api/v1/our-product/get-by-ourproduct
 // @access    public
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;
-    const response = await ContactUs.find({ franchise: id });
+    const response = await OurProduct.find({ franchise: id });
 
     res.status(201).json({
       message: "Successfully retrieved",

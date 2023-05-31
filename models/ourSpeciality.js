@@ -18,10 +18,10 @@ const ourSpecialitySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // franchise: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "franchise"
-    // },
+    franchise: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "franchise"
+    },
   },
   { timestamps: true }
 );

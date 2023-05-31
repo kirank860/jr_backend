@@ -1,20 +1,12 @@
 const mongoose = require("mongoose");
 
-const TestimonialSchema = new mongoose.Schema(
+const PrivacyPolicySchema = new mongoose.Schema(
   {
-    name: {
+    title: {
       type: String,
       required: true,
     },
-    company: {
-      type: String,
-      required: true,
-    },
-    message: {
-      type: String,
-      required: true,
-    },
-    image: {
+    description: {
       type: String,
       required: true,
     },
@@ -26,4 +18,4 @@ const TestimonialSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("testimonial", TestimonialSchema);
+module.exports = mongoose.model("privacyPolicy", PrivacyPolicySchema);

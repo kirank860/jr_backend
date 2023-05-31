@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
-const OurClientSchema = new mongoose.Schema(
+const TermsOfServiceSchema = new mongoose.Schema(
   {
-    clientLogo: {
+    title: {
       type: String,
       required: true,
     },
-    clientUrl: {
+    description: {
       type: String,
       required: true,
     },
@@ -18,4 +18,4 @@ const OurClientSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("ourClient", OurClientSchema);
+module.exports = mongoose.model("termsOfService", TermsOfServiceSchema);

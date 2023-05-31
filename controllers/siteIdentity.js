@@ -1,15 +1,15 @@
 const { default: mongoose } = require("mongoose");
-const ContactUs = require("../models/contactUs");
+const SiteIdentity = require("../models/siteIdentity");
 const upload = require("../middleware/multer");
 
 const allowed_file_size = 2;
-const DIR = "./uploads/contactus";
-const imageType = "image";
+const DIR = "./uploads/siteidentity";
+const imageType = "logo";
 
-// @desc      CREATE CONTACT US
-// @route     POST /api/v1/contact-us
-// @access    public
-exports.createContactUs = async (req, res, next) => {
+// @desc      CREATE SITE IDENTITY
+// @route     POST /api/v1/site-identity
+// @access    protect
+exports.createSiteIdentity = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
     multerUpload(req, res, async function (err) {
@@ -22,40 +22,33 @@ exports.createContactUs = async (req, res, next) => {
 
       const url = req.protocol + "://" + req.get("host");
 
-      // Create the Contact us object
-      const contactUs = {
-        title: req.body.title,
-        subTitle: req.body.subTitle,
-        description: req.body.description,
-        image: url + "/images/" + req.file.filename,
-        primaryAddress: req.body.primaryAddress,
-        secondaryAddress: req.body.secondaryAddress,
-        primaryPhone: req.body.primaryPhone,
-        secondaryPhone: req.body.secondaryPhone,
-        primaryEmail: req.body.primaryEmail,
-        secondaryEmail: req.body.secondaryEmail,
-        locationUrl: req.body.locationUrl,
+      // Create the SiteIdentity object
+      const siteidentity = {
+        siteTitle: req.body.siteTitle,
+        tagLine: req.body.tagLine,
+        siteFavIcon: req.body.siteFavIcon,
+        logo: url + "/images/" + req.file.filename,
         franchise: req.body.franchise,
       };
 
       if (req.file.size / (1024 * 1024) > allowed_file_size) {
         return res.status(401).json({
           success: false,
-          message: "Image too large",
+          message: "Logo file too large",
         });
       }
 
-      // Save the Contact us
-      const newContactUs = await ContactUs.create(contactUs);
+      // Save the SiteIdentity
+      const newSiteIdentity = await SiteIdentity.create(siteidentity);
 
       res.status(201).json({
         success: true,
-        message: "Contact us added successfully",
-        data: newContactUs,
+        message: "Site identity created successfully",
+        data: newSiteIdentity,
       });
     });
   } catch (err) {
-    console.log("Error:", err);
+    console.log(err);
     res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -63,35 +56,34 @@ exports.createContactUs = async (req, res, next) => {
   }
 };
 
-
-// @desc      GET CONTACT US
-// @route     GET /api/v1/contact-us
-// @access    public
-exports.getContactUs = async (req, res) => {
+// @desc      GET SITE IDENTITY
+// @route     GET /api/v1/site-identity/:id
+// @access    protect
+exports.getSiteIdentity = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
     if (id && mongoose.isValidObjectId(id)) {
-      const response = await ContactUs.findById(id).populate("franchise");
+      const response = await SiteIdentity.findById(id).populate("franchise");
       return res.status(200).json({
         success: true,
-        message: `Retrieved specific contact us`,
+        message: `Retrieved specific site identity`,
         response,
       });
     }
     const query = searchkey
-      ? { ...req.filter, title: { $regex: searchkey, $options: "i" } }
+      ? { ...req.filter, siteTitle: { $regex: searchkey, $options: "i" } }
       : req.filter;
     const [totalCount, filterCount, data] = await Promise.all([
-      parseInt(skip) === 0 && ContactUs.countDocuments(),
-      parseInt(skip) === 0 && ContactUs.countDocuments(query),
-      ContactUs.find(query)
+      parseInt(skip) === 0 && SiteIdentity.countDocuments(),
+      parseInt(skip) === 0 && SiteIdentity.countDocuments(query),
+      SiteIdentity.find(query)
         .populate("franchise")
         .skip(parseInt(skip) || 0)
         .limit(parseInt(limit) || 50),
     ]);
     res.status(200).json({
       success: true,
-      message: `Retrieved all contact us`,
+      message: `Retrieved all site identity`,
       response: data,
       count: data.length,
       totalCount: totalCount || 0,
@@ -106,10 +98,10 @@ exports.getContactUs = async (req, res) => {
   }
 };
 
-// @desc      UPDATE CONTACT US
-// @route     PUT /api/v1/contact-us
-// @access    public
-exports.updateContactUs = async (req, res) => {
+// @desc      UPDATE SPECIFIC SITE IDENTITY
+// @route     PUT /api/v1/site-identity/:id
+// @access    protect
+exports.updateSiteIdentity = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
     multerUpload(req, res, async function (err) {
@@ -130,34 +122,25 @@ exports.updateContactUs = async (req, res) => {
         });
       }
 
-
-
       const updateFields = {
-        title: body.title,
-        subTitle: body.subTitle,
-        description: body.description,
-        image: file ? url + "/images/" + file.filename : undefined,
-        primaryAddress: body.primaryAddress,
-        secondaryAddress: body.secondaryAddress,
-        primaryPhone: body.primaryPhone,
-        secondaryPhone: body.secondaryPhone,
-        primaryEmail: body.primaryEmail,
-        secondaryEmail: body.secondaryEmail,
-        locationUrl: body.locationUrl,
+        siteTitle: body.siteTitle,
+        tagLine: body.tagLine,
+        siteFavIcon: body.siteFavIcon,
+        logo: file ? url + "/images/" + file.filename : undefined,
         franchise: body.franchise,
       };
 
-      if (file && file.size / (1024 * 1024) > allowed_file_size) {
+      if (file.size / (1024 * 1024) > allowed_file_size) {
         return res.status(401).json({
           success: false,
           message: "Image file too large",
         });
       }
 
-      const response = await ContactUs.findByIdAndUpdate(id, updateFields);
+      const response = await SiteIdentity.findByIdAndUpdate(id, updateFields);
 
       res.status(201).json({
-        message: "Successfully updated contact us",
+        message: "Successfully updated site identity",
         data: response,
       });
     });
@@ -170,23 +153,23 @@ exports.updateContactUs = async (req, res) => {
   }
 };
 
-// @desc      DELETE CONTACT US
-// @route     DELETE /api/v1/contact-us
-// @access    public
-exports.deleteContactUs = async (req, res) => {
+// @desc      DELETE SPECIFIC SITE IDENTITY
+// @route     DELETE /api/v1/site-identity/:id
+// @access    protect
+exports.deleteSiteIdentity = async (req, res) => {
   try {
-    const contactus = await ContactUs.findByIdAndDelete(req.query.id);
+    const siteidentity = await SiteIdentity.findByIdAndDelete(req.query.id);
 
-    if (!contactus) {
+    if (!siteidentity) {
       return res.status(404).json({
         success: false,
-        message: "Contact us not found",
+        message: "Site identity not found",
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Contact us deleted successfully",
+      message: "Site identity deleted successfully",
     });
   } catch (err) {
     console.log(err);
@@ -198,12 +181,12 @@ exports.deleteContactUs = async (req, res) => {
 };
 
 // @desc      GET BY FRANCHISE
-// @route     GET /api/v1/contact-us/get-by-contactus
+// @route     GET /api/v1/site-identity/get-by-siteidentity
 // @access    public
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;
-    const response = await ContactUs.find({ franchise: id });
+    const response = await SiteIdentity.find({ franchise: id });
 
     res.status(201).json({
       message: "Successfully retrieved",
@@ -214,7 +197,7 @@ exports.getByFranchise = async (req, res) => {
     console.log("Error:", err);
     res.status(500).json({
       error: "Internal server error",
-      success: false,
+      success: fal
     });
   }
 };
