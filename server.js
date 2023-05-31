@@ -47,6 +47,7 @@ const aboutus = require("./routes/aboutUs");
 const contactUs = require("./routes/contactUs");
 const ourSpeciality = require("./routes/ourSpeciality");
 const testimonial = require("./routes/testimonial");
+const subMenu = require("./routes/subMenu");
 
 // mount routers
 app.use("/api/V1/auth", auth);
@@ -58,6 +59,7 @@ app.use("/api/v1/about-us", aboutus);
 app.use("/api/v1/contact-us", contactUs);
 app.use("/api/v1/our-speciality", ourSpeciality);
 app.use("/api/v1/testimonial", testimonial);
+app.use("/api/v1/sub-menu", subMenu);
 
 const PORT = process.env.PORT || 8050;
 app.listen(PORT, console.log(`port is running ${PORT}`));
