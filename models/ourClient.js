@@ -4,11 +4,9 @@ const OurClientSchema = new mongoose.Schema(
   {
     clientLogo: {
       type: String,
-      required: true,
     },
     clientUrl: {
       type: String,
-      required: true,
     },
     franchise: {
       type: mongoose.Schema.Types.ObjectId,

@@ -3,7 +3,7 @@ const SocialMedia = require("../models/socialMedia");
 
 // @desc      CREATE SOCIAL MEDIA
 // @route     POST /api/v1/social-media
-// @access    protect
+// @access    private
 exports.createSocialMedia = async (req, res) => {
   try {
     // Create the SocialMedia object
@@ -38,7 +38,7 @@ exports.createSocialMedia = async (req, res) => {
 
 // @desc      GET SOCIAL MEDIA
 // @route     GET /api/v1/social-media/:id
-// @access    protect
+// @access    private
 exports.getSocialMedia = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -80,7 +80,7 @@ exports.getSocialMedia = async (req, res) => {
 
 // @desc      UPDATE SPECIFIC SOCIAL MEDIA
 // @route     PUT /api/v1/social-media/:id
-// @access    protect
+// @access    private
 exports.updateSocialMedia = async (req, res) => {
   try {
     const { body, query } = req;
@@ -114,7 +114,7 @@ exports.updateSocialMedia = async (req, res) => {
 
 // @desc      DELETE SPECIFIC SOCIAL MEDIA
 // @route     DELETE /api/v1/social-media/:id
-// @access    protect
+// @access    private
 exports.deleteSocialMedia = async (req, res) => {
   try {
     const socialmedia = await SocialMedia.findByIdAndDelete(req.query.id);
@@ -141,7 +141,7 @@ exports.deleteSocialMedia = async (req, res) => {
 
 // @desc      GET BY FRANCHISE
 // @route     GET /api/v1/social-media/get-by-socialmedia
-// @access    public
+// @access    private
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;

@@ -3,7 +3,7 @@ const PostCategory = require("../models/postCategory");
 
 // @desc      CREATE POST CATEGORY
 // @route     POST /api/v1/post-category
-// @access    public
+// @access    private
 exports.createPostCategory = async (req, res, next) => {
   try {
     // Create the PostCategory object
@@ -33,7 +33,7 @@ exports.createPostCategory = async (req, res, next) => {
 
 // @desc      GET POST CATEGORY
 // @route     GET /api/v1/post-category
-// @access    public
+// @access    private
 exports.getPostCategory = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -75,7 +75,7 @@ exports.getPostCategory = async (req, res) => {
 
 // @desc      UPDATE POST CATEGORY
 // @route     PUT /api/v1/post-category
-// @access    public
+// @access    private
 exports.updatePostCategory = async (req, res) => {
   try {
     const { body, query } = req;
@@ -104,7 +104,7 @@ exports.updatePostCategory = async (req, res) => {
 
 // @desc      DELETE POST CATEGORY
 // @route     DELETE /api/v1/post-category
-// @access    public
+// @access    private
 exports.deletePostCategory = async (req, res) => {
   try {
     const postcategory = await PostCategory.findByIdAndDelete(req.query.id);
@@ -131,7 +131,7 @@ exports.deletePostCategory = async (req, res) => {
 
 // @desc      GET BY FRANCHISE
 // @route     GET /api/v1/post-category/get-by-postcategory
-// @access    public
+// @access    private
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;

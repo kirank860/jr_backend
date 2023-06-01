@@ -8,7 +8,7 @@ const imageType = "logo";
 
 // @desc      CREATE NEW FRANCHISE
 // @route     POST /api/v1/franchises
-// @access    protect
+// @access    private
 exports.createFranchise = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -62,7 +62,7 @@ exports.createFranchise = async (req, res) => {
 
 // @desc      GET FRANCHISE
 // @route     GET /api/v1/franchises/:id
-// @access    protect
+// @access    private
 exports.getFranchise = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -103,7 +103,7 @@ exports.getFranchise = async (req, res) => {
 
 // @desc      UPDATE SPECIFIC FRANCHISE
 // @route     PUT /api/v1/franchises/:id
-// @access    protect
+// @access    private
 exports.updateFranchise = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -162,7 +162,7 @@ exports.updateFranchise = async (req, res) => {
 
 // @desc      DELETE SPECIFIC FRANCHISE
 // @route     DELETE /api/v1/franchises/:id
-// @access    protect
+// @access    private
 exports.deleteFranchise = async (req, res) => {
   try {
     const franchise = await Franchise.findByIdAndDelete(req.query.id);

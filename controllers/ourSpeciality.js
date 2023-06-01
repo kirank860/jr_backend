@@ -8,7 +8,7 @@ const imageType = "image";
 
 // @desc      CREATE OUR SPECIALITY
 // @route     POST /api/v1/our-speciality
-// @access    public
+// @access    private
 exports.createOurSpeciality = async (req, res, next) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -59,7 +59,7 @@ exports.createOurSpeciality = async (req, res, next) => {
 
 // @desc      GET OUR SPECIALITY
 // @route     GET /api/v1/our-speciality
-// @access    public
+// @access    private
 exports.getOurSpeciality = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -101,7 +101,7 @@ exports.getOurSpeciality = async (req, res) => {
 
 // @desc      UPDATE OUR SPECIALITY
 // @route     PUT /api/v1/our-speciality
-// @access    public
+// @access    private
 exports.updateOurSpeciality = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -158,7 +158,7 @@ exports.updateOurSpeciality = async (req, res) => {
 
 // @desc      DELETE OUR SPECIALITY
 // @route     DELETE /api/v1/our-speciality
-// @access    public
+// @access    private
 exports.deleteOurSpeciality = async (req, res) => {
   try {
     const ourSpeciality = await OurSpeciality.findByIdAndDelete(req.query.id);
@@ -185,7 +185,7 @@ exports.deleteOurSpeciality = async (req, res) => {
 
 // @desc      GET BY FRANCHISE
 // @route     GET /api/v1/our-speciality/get-by-ourspeciality
-// @access    public
+// @access    private
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;

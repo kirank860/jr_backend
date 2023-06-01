@@ -9,7 +9,7 @@ const imageType = "image";
 
 // @desc      CREATE ABOUTUS
 // @route     POST /api/v1/about-us
-// @access    public
+// @access    private
 exports.createAboutUs = async (req, res, next) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -64,7 +64,7 @@ exports.createAboutUs = async (req, res, next) => {
 
 // @desc      GET ABOUTUS
 // @route     GET /api/v1/about-us
-// @access    public
+// @access    private
 exports.getAboutUs = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -76,9 +76,19 @@ exports.getAboutUs = async (req, res) => {
         response,
       });
     }
-    const query = searchkey
-      ? { ...req.filter, title: { $regex: searchkey, $options: "i" } }
-      : req.filter;
+    // const query = searchkey
+    //   ? { ...req.filter, title: { $regex: searchkey, $options: "i" } }
+    //   : req.filter;
+    const query = {
+      ...req.filter,
+      ...(searchkey && {
+        $or: [
+          { title: { $regex: searchkey, $options: "i" } },
+          { subTitle: { $regex: searchkey, $options: "i" } },
+        ],
+      }),
+    };
+
     const [totalCount, filterCount, data] = await Promise.all([
       parseInt(skip) === 0 && AboutUs.countDocuments(),
       parseInt(skip) === 0 && AboutUs.countDocuments(query),
@@ -105,7 +115,7 @@ exports.getAboutUs = async (req, res) => {
 
 // @desc      UPDATE ABOUTUS
 // @route     PUT /api/v1/about-us
-// @access    public
+// @access    private
 exports.updateAboutUs = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -164,7 +174,7 @@ exports.updateAboutUs = async (req, res) => {
 
 // @desc      DELETE ABOUTUS
 // @route     DELETE /api/v1/about-us
-// @access    public
+// @access    private
 exports.deleteAboutUs = async (req, res) => {
   try {
     const aboutus = await AboutUs.findByIdAndDelete(req.query.id);
@@ -191,7 +201,7 @@ exports.deleteAboutUs = async (req, res) => {
 
 // @desc      GET BY FRANCHISE
 // @route     GET /api/v1/about-us/get-by-aboutus
-// @access    public
+// @access    private
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;

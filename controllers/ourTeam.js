@@ -8,7 +8,7 @@ const imageType = "image";
 
 // @desc      CREATE NEW OURTEAM
 // @route     POST /api/v1/our-team
-// @access    protect
+// @access    private
 exports.createOurTeam = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -68,7 +68,7 @@ exports.createOurTeam = async (req, res) => {
 
 // @desc      GET OURTEAM
 // @route     GET /api/v1/our-team/:id
-// @access    protect
+// @access    private
 exports.getOurTeam = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -110,7 +110,7 @@ exports.getOurTeam = async (req, res) => {
 
 // @desc      UPDATE SPECIFIC OURTEAM
 // @route     PUT /api/v1/our-team/:id
-// @access    protect
+// @access    private
 exports.updateOurTeam = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -175,7 +175,7 @@ exports.updateOurTeam = async (req, res) => {
 
 // @desc      DELETE SPECIFIC OURTEAM
 // @route     DELETE /api/v1/our-team/:id
-// @access    protect
+// @access    private
 exports.deleteOurTeam = async (req, res) => {
   try {
     const ourteam = await OurTeam.findByIdAndDelete(req.query.id);
@@ -203,7 +203,7 @@ exports.deleteOurTeam = async (req, res) => {
 
 // @desc      GET BY FRANCHISE
 // @route     GET /api/v1/our-team/get-by-ourteam
-// @access    public
+// @access    private
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;

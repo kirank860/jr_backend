@@ -4,11 +4,10 @@ const ProductCategorySchema = new mongoose.Schema(
   {
     productCategory: {
       type: String,
-      required: true,
     },
     franchise: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "franchise"
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "franchise"
     },
   },
   { timestamps: true }

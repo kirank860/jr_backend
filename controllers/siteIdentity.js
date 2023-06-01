@@ -8,7 +8,7 @@ const imageType = "logo";
 
 // @desc      CREATE SITE IDENTITY
 // @route     POST /api/v1/site-identity
-// @access    protect
+// @access    private
 exports.createSiteIdentity = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -58,7 +58,7 @@ exports.createSiteIdentity = async (req, res) => {
 
 // @desc      GET SITE IDENTITY
 // @route     GET /api/v1/site-identity/:id
-// @access    protect
+// @access    private
 exports.getSiteIdentity = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -100,7 +100,7 @@ exports.getSiteIdentity = async (req, res) => {
 
 // @desc      UPDATE SPECIFIC SITE IDENTITY
 // @route     PUT /api/v1/site-identity/:id
-// @access    protect
+// @access    private
 exports.updateSiteIdentity = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -155,7 +155,7 @@ exports.updateSiteIdentity = async (req, res) => {
 
 // @desc      DELETE SPECIFIC SITE IDENTITY
 // @route     DELETE /api/v1/site-identity/:id
-// @access    protect
+// @access    private
 exports.deleteSiteIdentity = async (req, res) => {
   try {
     const siteidentity = await SiteIdentity.findByIdAndDelete(req.query.id);
@@ -182,7 +182,7 @@ exports.deleteSiteIdentity = async (req, res) => {
 
 // @desc      GET BY FRANCHISE
 // @route     GET /api/v1/site-identity/get-by-siteidentity
-// @access    public
+// @access    private
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;

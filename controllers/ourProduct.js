@@ -8,7 +8,7 @@ const imageType = "image";
 
 // @desc      CREATE OUR PRODUCT
 // @route     POST /api/v1/our-product
-// @access    protect
+// @access    private
 exports.createOurProduct = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -65,7 +65,7 @@ exports.createOurProduct = async (req, res) => {
 
 // @desc      GET OUR PRODUCT
 // @route     GET /api/v1/our-product/:id
-// @access    protect
+// @access    private
 exports.getOurProduct = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -110,7 +110,7 @@ exports.getOurProduct = async (req, res) => {
 
 // @desc      UPDATE SPECIFIC OUR PRODUCT
 // @route     PUT /api/v1/our-product/:id
-// @access    protect
+// @access    private
 exports.updateOurProduct = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -172,7 +172,7 @@ exports.updateOurProduct = async (req, res) => {
 
 // @desc      DELETE SPECIFIC OUR PRODUCT
 // @route     DELETE /api/v1/our-product/:id
-// @access    protect
+// @access    private
 exports.deleteOurProduct = async (req, res) => {
   try {
     const ourproduct = await OurProduct.findByIdAndDelete(req.query.id);
@@ -199,7 +199,7 @@ exports.deleteOurProduct = async (req, res) => {
 
 // @desc      GET BY FRANCHISE
 // @route     GET /api/v1/our-product/get-by-ourproduct
-// @access    public
+// @access    private
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;

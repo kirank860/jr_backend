@@ -2,7 +2,7 @@ const UserRole = require("../models/userRole");
 
 // @desc      Create a new user role
 // @route     POST /api/v1/user-role
-// @access    Public
+// @access    private
 exports.createUserRole = async (req, res) => {
   try {
     const newUserRole = await UserRole.create(req.body);
@@ -22,7 +22,7 @@ exports.createUserRole = async (req, res) => {
 
 // @desc      Get all user roles
 // @route     GET /api/v1/user-role/get-all-user-roles
-// @access    Public
+// @access    private
 exports.getAllUserRoles = async (req, res) => {
   try {
     const userRoles = await UserRole.find();
@@ -49,7 +49,7 @@ exports.getAllUserRoles = async (req, res) => {
 
 // @desc      Get a single user role
 // @route     GET /api/v1/user-role
-// @access    Public
+// @access    private
 exports.getUserRole = async (req, res) => {
   try {
     const userRole = await UserRole.findById(req.query.id);
@@ -77,7 +77,7 @@ exports.getUserRole = async (req, res) => {
 
 // @desc      Update a user role by ID
 // @route     PUT /api/v1/user-role
-// @access    Public
+// @access    private
 exports.updateUserRole = async (req, res) => {
   try {
     const userRole = await UserRole.findByIdAndUpdate(req.query.id, req.body, {
@@ -107,7 +107,7 @@ exports.updateUserRole = async (req, res) => {
 
 // @desc      Delete a user role by ID
 // @route     DELETE /api/v1/user-role
-// @access    Public
+// @access    private
 exports.deleteUserRole = async (req, res) => {
   try {
     const userRole = await UserRole.findByIdAndDelete(req.query.id, {

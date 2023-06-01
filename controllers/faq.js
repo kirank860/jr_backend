@@ -3,7 +3,7 @@ const Faq = require("../models/faq");
 
 // @desc      CREATE FAQ
 // @route     POST /api/v1/faq
-// @access    public
+// @access    private
 exports.createFaq = async (req, res, next) => {
     try {
         // Create the Faq object
@@ -34,7 +34,7 @@ exports.createFaq = async (req, res, next) => {
 
 // @desc      GET FAQ
 // @route     GET /api/v1/faq
-// @access    public
+// @access    private
 exports.getFaq = async (req, res) => {
     try {
         const { id, skip, limit, searchkey } = req.query;
@@ -75,7 +75,7 @@ exports.getFaq = async (req, res) => {
 
 // @desc      UPDATE FAQ
 // @route     PUT /api/v1/faq
-// @access    public
+// @access    private
 exports.updateFaq = async (req, res) => {
     try {
         const { body, query } = req;
@@ -105,7 +105,7 @@ exports.updateFaq = async (req, res) => {
 
 // @desc      DELETE FAQ
 // @route     DELETE /api/v1/faq
-// @access    public
+// @access    private
 exports.deleteFaq = async (req, res) => {
     try {
         const faq = await Faq.findByIdAndDelete(req.query.id);
@@ -132,7 +132,7 @@ exports.deleteFaq = async (req, res) => {
 
 // @desc      GET BY FRANCHISE
 // @route     GET /api/v1/faq/get-by-faq
-// @access    public
+// @access    private
 exports.getByFranchise = async (req, res) => {
     try {
         const { id } = req.query;

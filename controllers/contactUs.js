@@ -8,7 +8,7 @@ const imageType = "image";
 
 // @desc      CREATE CONTACT US
 // @route     POST /api/v1/contact-us
-// @access    public
+// @access    private
 exports.createContactUs = async (req, res, next) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -66,7 +66,7 @@ exports.createContactUs = async (req, res, next) => {
 
 // @desc      GET CONTACT US
 // @route     GET /api/v1/contact-us
-// @access    public
+// @access    private
 exports.getContactUs = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -78,9 +78,22 @@ exports.getContactUs = async (req, res) => {
         response,
       });
     }
-    const query = searchkey
-      ? { ...req.filter, title: { $regex: searchkey, $options: "i" } }
-      : req.filter;
+
+    const query = {
+      ...req.filter,
+      ...(searchkey && {
+        $or: [
+          { title: { $regex: searchkey, $options: "i" } },
+          { subTitle: { $regex: searchkey, $options: "i" } },
+          { primaryPhone: { $regex: searchkey, $options: "i" } },
+          { secondaryPhone: { $regex: searchkey, $options: "i" } },
+          { primaryEmail: { $regex: searchkey, $options: "i" } },
+          { secondaryEmail: { $regex: searchkey, $options: "i" } },
+          { locationUrl: { $regex: searchkey, $options: "i" } },
+        ],
+      }),
+    };
+
     const [totalCount, filterCount, data] = await Promise.all([
       parseInt(skip) === 0 && ContactUs.countDocuments(),
       parseInt(skip) === 0 && ContactUs.countDocuments(query),
@@ -108,7 +121,7 @@ exports.getContactUs = async (req, res) => {
 
 // @desc      UPDATE CONTACT US
 // @route     PUT /api/v1/contact-us
-// @access    public
+// @access    private
 exports.updateContactUs = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -172,7 +185,7 @@ exports.updateContactUs = async (req, res) => {
 
 // @desc      DELETE CONTACT US
 // @route     DELETE /api/v1/contact-us
-// @access    public
+// @access    private
 exports.deleteContactUs = async (req, res) => {
   try {
     const contactus = await ContactUs.findByIdAndDelete(req.query.id);
@@ -199,7 +212,7 @@ exports.deleteContactUs = async (req, res) => {
 
 // @desc      GET BY FRANCHISE
 // @route     GET /api/v1/contact-us/get-by-contactus
-// @access    public
+// @access    private
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;

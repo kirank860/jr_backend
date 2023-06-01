@@ -3,7 +3,7 @@ const Location = require("../models/location");
 
 // @desc      CREATE LOCATION
 // @route     POST /api/v1/location
-// @access    public
+// @access    private
 exports.createLocation = async (req, res, next) => {
   try {
     // Create the Location object
@@ -31,7 +31,7 @@ exports.createLocation = async (req, res, next) => {
 
 // @desc      GET LOCATION
 // @route     GET /api/v1/location
-// @access    public
+// @access    private
 exports.getLocation = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -72,7 +72,7 @@ exports.getLocation = async (req, res) => {
 
 // @desc      UPDATE LOCATION
 // @route     PUT /api/v1/location
-// @access    public
+// @access    private
 exports.updateLocation = async (req, res) => {
   try {
     const { body, query } = req;
@@ -99,7 +99,7 @@ exports.updateLocation = async (req, res) => {
 
 // @desc      DELETE LOCATION
 // @route     DELETE /api/v1/location
-// @access    public
+// @access    private
 exports.deleteLocation = async (req, res) => {
   try {
     const location = await Location.findByIdAndDelete(req.query.id);
