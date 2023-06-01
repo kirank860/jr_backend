@@ -5,6 +5,7 @@ const {
   getOurSpeciality,
   updateOurSpeciality,
   deleteOurSpeciality,
+  getByFranchise,
 } = require("../controllers/ourSpeciality");
 // Middleware
 const { protect, authorize } = require("../middleware/auth");
@@ -16,5 +17,7 @@ router
   .get(reqFilter, getOurSpeciality)
   .put(updateOurSpeciality)
   .delete(deleteOurSpeciality);
+
+router.get("/get-by-ourspeciality", getByFranchise);
 
 module.exports = router;

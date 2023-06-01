@@ -5,6 +5,7 @@ const {
   getOurClient,
   updateOurClient,
   deleteOurClient,
+  getByFranchise,
 } = require("../controllers/ourClient");
 // Middleware
 const { protect, authorize } = require("../middleware/auth");
@@ -16,5 +17,7 @@ router
   .get(reqFilter, getOurClient)
   .put(updateOurClient)
   .delete(deleteOurClient);
+
+router.get("/get-by-ourclient", getByFranchise);
 
 module.exports = router;

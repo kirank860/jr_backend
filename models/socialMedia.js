@@ -1,45 +1,41 @@
 const mongoose = require("mongoose");
 
-const FranchiseSchema = new mongoose.Schema(
+const SocialMediaSchema = new mongoose.Schema(
   {
-    name: {
+    instaId: {
       type: String,
       required: true,
     },
-    location: {
+    facebookId: {
       type: String,
       required: true,
     },
-    website: {
+    twitterId: {
       type: String,
       required: true,
     },
-    email: {
+    linkedinId: {
       type: String,
       required: true,
     },
-    phone: {
+    pinterestId: {
       type: String,
       required: true,
     },
-    description: {
+    youtubeId: {
       type: String,
       required: true,
     },
-    logo: {
+    whatsapp: {
       type: String,
       required: true,
     },
-    primaryColour: {
-      type: String,
-      required: true,
-    },
-    secondaryColour: {
-      type: String,
-      required: true,
+    franchise: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "franchise"
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("franchise", FranchiseSchema);
+module.exports = mongoose.model("socialMedia", SocialMediaSchema);

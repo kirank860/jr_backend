@@ -1,29 +1,29 @@
 const mongoose = require("mongoose");
 
-const TestimonialSchema = new mongoose.Schema(
+const SiteIdentitySchema = new mongoose.Schema(
   {
-    name: {
+    siteTitle: {
       type: String,
       required: true,
     },
-    company: {
+    tagLine: {
       type: String,
       required: true,
     },
-    message: {
+    siteFavIcon: {
       type: String,
       required: true,
     },
-    image: {
+    logo: {
       type: String,
       required: true,
     },
     franchise: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "franchise"
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "franchise"
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("testimonial", TestimonialSchema);
+module.exports = mongoose.model("siteIdentity", SiteIdentitySchema);

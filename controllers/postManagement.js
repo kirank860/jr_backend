@@ -1,15 +1,15 @@
 const { default: mongoose } = require("mongoose");
-const ContactUs = require("../models/contactUs");
+const PostManagement = require("../models/postManagement");
 const upload = require("../middleware/multer");
 
 const allowed_file_size = 2;
-const DIR = "./uploads/contactus";
-const imageType = "image";
+const DIR = "./uploads/postmanagement";
+const imageType = "featuredImage";
 
-// @desc      CREATE CONTACT US
-// @route     POST /api/v1/contact-us
+// @desc      CREATE POST MANAGEMENT
+// @route     POST /api/v1/post-management
 // @access    public
-exports.createContactUs = async (req, res, next) => {
+exports.createPostManagement = async (req, res, next) => {
   try {
     const multerUpload = upload(DIR, imageType);
     multerUpload(req, res, async function (err) {
@@ -22,19 +22,14 @@ exports.createContactUs = async (req, res, next) => {
 
       const url = req.protocol + "://" + req.get("host");
 
-      // Create the Contact us object
-      const contactUs = {
+      // Create the PostManagement object
+      const postmanagement = {
         title: req.body.title,
-        subTitle: req.body.subTitle,
-        description: req.body.description,
-        image: url + "/images/" + req.file.filename,
-        primaryAddress: req.body.primaryAddress,
-        secondaryAddress: req.body.secondaryAddress,
-        primaryPhone: req.body.primaryPhone,
-        secondaryPhone: req.body.secondaryPhone,
-        primaryEmail: req.body.primaryEmail,
-        secondaryEmail: req.body.secondaryEmail,
-        locationUrl: req.body.locationUrl,
+        author: req.body.author,
+        content: req.body.content,
+        date: req.body.date,
+        featuredImage: url + "/images/" + req.file.filename,
+        category: req.body.category,
         franchise: req.body.franchise,
       };
 
@@ -45,13 +40,13 @@ exports.createContactUs = async (req, res, next) => {
         });
       }
 
-      // Save the Contact us
-      const newContactUs = await ContactUs.create(contactUs);
+      // Save the PostManagement
+      const newPostManagement = (await PostManagement.create(postmanagement));
 
       res.status(201).json({
         success: true,
-        message: "Contact us added successfully",
-        data: newContactUs,
+        message: "Post management added successfully",
+        data: newPostManagement,
       });
     });
   } catch (err) {
@@ -64,17 +59,17 @@ exports.createContactUs = async (req, res, next) => {
 };
 
 
-// @desc      GET CONTACT US
-// @route     GET /api/v1/contact-us
+// @desc      GET POST MANAGEMENT
+// @route     GET /api/v1/post-management
 // @access    public
-exports.getContactUs = async (req, res) => {
+exports.getPostManagement = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
     if (id && mongoose.isValidObjectId(id)) {
-      const response = await ContactUs.findById(id).populate("franchise");
+      const response = await PostManagement.findById(id).populate("franchise");
       return res.status(200).json({
         success: true,
-        message: `Retrieved specific contact us`,
+        message: `Retrieved specific post management`,
         response,
       });
     }
@@ -82,16 +77,15 @@ exports.getContactUs = async (req, res) => {
       ? { ...req.filter, title: { $regex: searchkey, $options: "i" } }
       : req.filter;
     const [totalCount, filterCount, data] = await Promise.all([
-      parseInt(skip) === 0 && ContactUs.countDocuments(),
-      parseInt(skip) === 0 && ContactUs.countDocuments(query),
-      ContactUs.find(query)
-        .populate("franchise")
+      parseInt(skip) === 0 && PostManagement.countDocuments(),
+      parseInt(skip) === 0 && PostManagement.countDocuments(query),
+      PostManagement.find(query).populate("franchise")
         .skip(parseInt(skip) || 0)
         .limit(parseInt(limit) || 50),
     ]);
     res.status(200).json({
       success: true,
-      message: `Retrieved all contact us`,
+      message: `Retrieved all post management`,
       response: data,
       count: data.length,
       totalCount: totalCount || 0,
@@ -106,10 +100,10 @@ exports.getContactUs = async (req, res) => {
   }
 };
 
-// @desc      UPDATE CONTACT US
-// @route     PUT /api/v1/contact-us
+// @desc      UPDATE POST MANAGEMENT
+// @route     PUT /api/v1/post-management
 // @access    public
-exports.updateContactUs = async (req, res) => {
+exports.updatePostManagement = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
     multerUpload(req, res, async function (err) {
@@ -130,20 +124,13 @@ exports.updateContactUs = async (req, res) => {
         });
       }
 
-
-
       const updateFields = {
         title: body.title,
-        subTitle: body.subTitle,
-        description: body.description,
-        image: file ? url + "/images/" + file.filename : undefined,
-        primaryAddress: body.primaryAddress,
-        secondaryAddress: body.secondaryAddress,
-        primaryPhone: body.primaryPhone,
-        secondaryPhone: body.secondaryPhone,
-        primaryEmail: body.primaryEmail,
-        secondaryEmail: body.secondaryEmail,
-        locationUrl: body.locationUrl,
+        author: body.author,
+        content: body.content,
+        date: body.date,
+        featuredImage: file ? url + "/images/" + file.filename : undefined,
+        category: body.category,
         franchise: body.franchise,
       };
 
@@ -154,10 +141,10 @@ exports.updateContactUs = async (req, res) => {
         });
       }
 
-      const response = await ContactUs.findByIdAndUpdate(id, updateFields);
+      const response = await PostManagement.findByIdAndUpdate(id, updateFields);
 
       res.status(201).json({
-        message: "Successfully updated contact us",
+        message: "Successfully updated post management",
         data: response,
       });
     });
@@ -170,23 +157,23 @@ exports.updateContactUs = async (req, res) => {
   }
 };
 
-// @desc      DELETE CONTACT US
-// @route     DELETE /api/v1/contact-us
+// @desc      DELETE POST MANAGEMENT
+// @route     DELETE /api/v1/post-management
 // @access    public
-exports.deleteContactUs = async (req, res) => {
+exports.deletePostManagement = async (req, res) => {
   try {
-    const contactus = await ContactUs.findByIdAndDelete(req.query.id);
+    const postmanagement = await PostManagement.findByIdAndDelete(req.query.id);
 
-    if (!contactus) {
+    if (!postmanagement) {
       return res.status(404).json({
         success: false,
-        message: "Contact us not found",
+        message: "Post management not found",
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Contact us deleted successfully",
+      message: "Post management deleted successfully",
     });
   } catch (err) {
     console.log(err);
@@ -198,12 +185,12 @@ exports.deleteContactUs = async (req, res) => {
 };
 
 // @desc      GET BY FRANCHISE
-// @route     GET /api/v1/contact-us/get-by-contactus
+// @route     GET /api/v1/post-management/get-by-postmanagement
 // @access    public
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;
-    const response = await ContactUs.find({ franchise: id });
+    const response = await PostManagement.find({ franchise: id });
 
     res.status(201).json({
       message: "Successfully retrieved",

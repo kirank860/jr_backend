@@ -1,23 +1,23 @@
 const router = require("express").Router();
 // Controllers
 const {
-  createAboutUs,
-  getAboutUs,
-  updateAboutUs,
-  deleteAboutUs,
+  createOurTeam,
+  getOurTeam,
+  updateOurTeam,
+  deleteOurTeam,
   getByFranchise,
-} = require("../controllers/aboutUs");
+} = require("../controllers/ourTeam");
 // Middleware
 const { protect, authorize } = require("../middleware/auth");
 const { reqFilter } = require("../middleware/filter");
 
 router
   .route("/")
-  .post(createAboutUs)
-  .get(reqFilter, getAboutUs)
-  .put(updateAboutUs)
-  .delete(deleteAboutUs);
+  .post(createOurTeam)
+  .get(reqFilter, getOurTeam)
+  .put(updateOurTeam)
+  .delete(deleteOurTeam);
 
-router.get("/get-by-aboutus", getByFranchise);
+router.get("/get-by-ourteam", getByFranchise);
 
 module.exports = router;

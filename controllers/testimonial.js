@@ -6,7 +6,7 @@ const allowed_file_size = 2;
 const DIR = "./uploads/testimonial";
 const imageType = "image";
 
-// @desc      create Testimonial
+// @desc      CREATE TESTIMONIAL
 // @route     POST /api/v1/testimonial
 // @access    public
 exports.createTestimonial = async (req, res, next) => {
@@ -28,7 +28,7 @@ exports.createTestimonial = async (req, res, next) => {
         company: req.body.company,
         message: req.body.message,
         image: url + "/images/" + req.file.filename,
-        // franchise: req.body.franchise,
+        franchise: req.body.franchise,
       };
 
       if (req.file.size / (1024 * 1024) > allowed_file_size) {
@@ -47,6 +47,7 @@ exports.createTestimonial = async (req, res, next) => {
         data: newTestimonial,
       });
     });
+
   } catch (err) {
     console.log("Error:", err);
     res.status(500).json({
@@ -57,14 +58,14 @@ exports.createTestimonial = async (req, res, next) => {
 };
 
 
-// @desc      get Testimonial
+// @desc      GET TESTIMONIAL
 // @route     GET /api/v1/testimonial
 // @access    public
 exports.getTestimonial = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
     if (id && mongoose.isValidObjectId(id)) {
-      const response = await Testimonial.findById(id);
+      const response = await Testimonial.findById(id).populate("franchise");
       return res.status(200).json({
         success: true,
         message: `retrieved specific Testimonials`,
@@ -77,9 +78,9 @@ exports.getTestimonial = async (req, res) => {
     const [totalCount, filterCount, data] = await Promise.all([
       parseInt(skip) === 0 && Testimonial.countDocuments(),
       parseInt(skip) === 0 && Testimonial.countDocuments(query),
-      Testimonial.find(query)
+      Testimonial.find(query).populate("franchise")
         .skip(parseInt(skip) || 0)
-        .limit(parseInt(limit) || 10),
+        .limit(parseInt(limit) || 50),
     ]);
     res.status(200).json({
       success: true,
@@ -98,7 +99,7 @@ exports.getTestimonial = async (req, res) => {
   }
 };
 
-// @desc      update Testimonial
+// @desc      UPDATE TESTIMONIAL
 // @route     PUT /api/v1/testimonial
 // @access    public
 exports.updateTestimonial = async (req, res) => {
@@ -122,14 +123,14 @@ exports.updateTestimonial = async (req, res) => {
         });
       }
 
-      
+
 
       const updateFields = {
         name: body.name,
         company: body.company,
         message: body.message,
         image: file ? url + "/images/" + file.filename : undefined,
-        // franchise: body.franchise,
+        franchise: body.franchise,
       };
 
       if (file && file.size / (1024 * 1024) > allowed_file_size) {
@@ -178,6 +179,28 @@ exports.deleteTestimonial = async (req, res) => {
     res.status(400).json({
       success: false,
       message: err,
+    });
+  }
+};
+
+// @desc      GET BY FRANCHISE
+// @route     GET /api/v1/testimonial/get-by-testimonial
+// @access    public
+exports.getByFranchise = async (req, res) => {
+  try {
+    const { id } = req.query;
+    const response = await Testimonial.find({ franchise: id });
+
+    res.status(201).json({
+      message: "Successfully retrieved",
+      data: response,
+    });
+
+  } catch (err) {
+    console.log("Error:", err);
+    res.status(500).json({
+      error: "Internal server error",
+      success: false,
     });
   }
 };

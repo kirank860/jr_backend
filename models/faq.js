@@ -1,12 +1,16 @@
 const mongoose = require("mongoose");
 
-const OurClientSchema = new mongoose.Schema(
+const FaqSchema = new mongoose.Schema(
   {
-    clientLogo: {
+    question: {
       type: String,
       required: true,
     },
-    clientUrl: {
+    answer: {
+      type: String,
+      required: true,
+    },
+    link: {
       type: String,
       required: true,
     },
@@ -18,4 +22,4 @@ const OurClientSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("ourClient", OurClientSchema);
+module.exports = mongoose.model("faq", FaqSchema);

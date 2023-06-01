@@ -1,12 +1,13 @@
 const { default: mongoose } = require("mongoose");
 const AboutUs = require("../models/aboutUs");
 const upload = require("../middleware/multer");
+const { query } = require("express");
 
 const allowed_file_size = 2;
 const DIR = "./uploads/aboutus";
 const imageType = "image";
 
-// @desc      create AboutUs
+// @desc      CREATE ABOUTUS
 // @route     POST /api/v1/about-us
 // @access    public
 exports.createAboutUs = async (req, res, next) => {
@@ -22,7 +23,7 @@ exports.createAboutUs = async (req, res, next) => {
 
       const url = req.protocol + "://" + req.get("host");
 
-      // Create the aboutus object
+      // Create the about us object
       const aboutUs = {
         title: req.body.title,
         subTitle: req.body.subTitle,
@@ -30,12 +31,9 @@ exports.createAboutUs = async (req, res, next) => {
         image: url + "/images/" + req.file.filename,
         history: req.body.history,
         vision: req.body.vision,
-        // image: url + "/images/" + req.file.filename,
         mission: req.body.mission,
-        // image: url + "/images/" + req.file.filename,
         featuresList: req.body.featuresList,
-        // image: url + "/images/" + req.file.filename,
-        // franchise: req.body.franchise,
+        franchise: req.body.franchise,
       };
 
       if (req.file.size / (1024 * 1024) > allowed_file_size) {
@@ -45,12 +43,12 @@ exports.createAboutUs = async (req, res, next) => {
         });
       }
 
-      // Save the aboutus
-      const newAboutUs = await AboutUs.create(aboutUs);
+      // Save the about us
+      const newAboutUs = (await AboutUs.create(aboutUs));
 
       res.status(201).json({
         success: true,
-        message: "AboutUs added successfully",
+        message: "About us added successfully",
         data: newAboutUs,
       });
     });
@@ -64,17 +62,17 @@ exports.createAboutUs = async (req, res, next) => {
 };
 
 
-// @desc      get AboutUs
+// @desc      GET ABOUTUS
 // @route     GET /api/v1/about-us
 // @access    public
 exports.getAboutUs = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
     if (id && mongoose.isValidObjectId(id)) {
-      const response = await AboutUs.findById(id);
+      const response = await AboutUs.findById(id).populate("franchise");
       return res.status(200).json({
         success: true,
-        message: `retrieved specific AboutUs`,
+        message: `Retrieved specific about us`,
         response,
       });
     }
@@ -84,13 +82,13 @@ exports.getAboutUs = async (req, res) => {
     const [totalCount, filterCount, data] = await Promise.all([
       parseInt(skip) === 0 && AboutUs.countDocuments(),
       parseInt(skip) === 0 && AboutUs.countDocuments(query),
-      AboutUs.find(query)
+      AboutUs.find(query).populate("franchise")
         .skip(parseInt(skip) || 0)
-        .limit(parseInt(limit) || 10),
+        .limit(parseInt(limit) || 50),
     ]);
     res.status(200).json({
       success: true,
-      message: `retrieved all AboutUs`,
+      message: `Retrieved all about us`,
       response: data,
       count: data.length,
       totalCount: totalCount || 0,
@@ -105,7 +103,7 @@ exports.getAboutUs = async (req, res) => {
   }
 };
 
-// @desc      update AboutUs
+// @desc      UPDATE ABOUTUS
 // @route     PUT /api/v1/about-us
 // @access    public
 exports.updateAboutUs = async (req, res) => {
@@ -129,8 +127,6 @@ exports.updateAboutUs = async (req, res) => {
         });
       }
 
-      
-
       const updateFields = {
         title: body.title,
         subTitle: body.subTitle,
@@ -138,12 +134,9 @@ exports.updateAboutUs = async (req, res) => {
         image: file ? url + "/images/" + file.filename : undefined,
         history: body.history,
         vision: body.vision,
-        // image: url + "/images/" + file.filename,
         mission: body.mission,
-        // image: url + "/images/" + file.filename,
         featuresList: body.featuresList,
-        // image: url + "/images/" + file.filename,
-        // franchise: body.franchise,
+        franchise: body.franchise,
       };
 
       if (file && file.size / (1024 * 1024) > allowed_file_size) {
@@ -156,7 +149,7 @@ exports.updateAboutUs = async (req, res) => {
       const response = await AboutUs.findByIdAndUpdate(id, updateFields);
 
       res.status(201).json({
-        message: "Successfully updated",
+        message: "Successfully updated about us",
         data: response,
       });
     });
@@ -169,7 +162,7 @@ exports.updateAboutUs = async (req, res) => {
   }
 };
 
-// @desc      delete AboutUs
+// @desc      DELETE ABOUTUS
 // @route     DELETE /api/v1/about-us
 // @access    public
 exports.deleteAboutUs = async (req, res) => {
@@ -192,6 +185,28 @@ exports.deleteAboutUs = async (req, res) => {
     res.status(400).json({
       success: false,
       message: err,
+    });
+  }
+};
+
+// @desc      GET BY FRANCHISE
+// @route     GET /api/v1/about-us/get-by-aboutus
+// @access    public
+exports.getByFranchise = async (req, res) => {
+  try {
+    const { id } = req.query;
+    const response = await AboutUs.find({ franchise: id });
+
+    res.status(201).json({
+      message: "Successfully retrieved",
+      data: response,
+    });
+
+  } catch (err) {
+    console.log("Error:", err);
+    res.status(500).json({
+      error: "Internal server error",
+      success: false,
     });
   }
 };

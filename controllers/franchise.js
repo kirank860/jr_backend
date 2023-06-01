@@ -1,8 +1,9 @@
+const { default: mongoose } = require("mongoose");
 const Franchise = require("../models/franchise");
 const upload = require("../middleware/multer");
 
 const allowed_file_size = 2;
-const DIR = "./public/franchiseLogo";
+const DIR = "./uploads/franchise";
 const imageType = "logo";
 
 // @desc      CREATE NEW FRANCHISE
@@ -59,57 +60,43 @@ exports.createFranchise = async (req, res) => {
   }
 };
 
-// @desc      GET ALL FRANCHISES
-// @route     GET /api/v1/franchises
-// @access    protect
-exports.getAllFranchises = async (req, res) => {
-  try {
-    const franchises = await Franchise.find();
-
-    if (!franchises.length) {
-      return res.status(404).json({
-        success: false,
-        message: "Franchises not found",
-      });
-    }
-    res.status(200).json({
-      success: true,
-      message: "All franchises retrieved successfully",
-      data: franchises,
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({
-      success: false,
-      message: err,
-    });
-  }
-};
-
-// @desc      GET SPECIFIC FRANCHISE
+// @desc      GET FRANCHISE
 // @route     GET /api/v1/franchises/:id
 // @access    protect
 exports.getFranchise = async (req, res) => {
   try {
-    const franchise = await Franchise.findById(req.query.id);
-
-    if (!franchise) {
-      return res.status(404).json({
-        success: false,
-        message: "Franchise not found",
+    const { id, skip, limit, searchkey } = req.query;
+    if (id && mongoose.isValidObjectId(id)) {
+      const response = await Franchise.findById(id);
+      return res.status(200).json({
+        success: true,
+        message: `retrieved specific Franchise`,
+        response,
       });
     }
-
+    const query = searchkey
+      ? { ...req.filter, name: { $regex: searchkey, $options: "i" } }
+      : req.filter;
+    const [totalCount, filterCount, data] = await Promise.all([
+      parseInt(skip) === 0 && Franchise.countDocuments(),
+      parseInt(skip) === 0 && Franchise.countDocuments(query),
+      Franchise.find(query)
+        .skip(parseInt(skip) || 0)
+        .limit(parseInt(limit) || 50),
+    ]);
     res.status(200).json({
       success: true,
-      message: "Franchise retrieved successfully",
-      data: franchise,
+      message: `retrieved all Franchise`,
+      response: data,
+      count: data.length,
+      totalCount: totalCount || 0,
+      filterCount: filterCount || 0,
     });
   } catch (err) {
     console.log(err);
-    res.status(400).json({
+    res.status(204).json({
       success: false,
-      message: err,
+      message: err.toString(),
     });
   }
 };
