@@ -11,7 +11,7 @@ const ourSpecialitySchema = new mongoose.Schema(
     description: {
       type: String,
     },
-    image: {
+    specialityImage: {
       type: String,
     },
     franchise: {

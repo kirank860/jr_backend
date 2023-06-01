@@ -11,49 +11,17 @@ const imageType = "logo";
 // @access    private
 exports.createFranchise = async (req, res) => {
   try {
-    const multerUpload = upload(DIR, imageType);
-    multerUpload(req, res, async function (err) {
-      if (err) {
-        return res.status(400).json({
-          success: false,
-          message: err.message,
-        });
-      }
+    const newFranchise = await Franchise.create(req.body);
 
-      const url = req.protocol + "://" + req.get("host");
-
-      // Create the franchise object
-      const franchise = {
-        name: req.body.name,
-        location: req.body.location,
-        website: req.body.website,
-        email: req.body.email,
-        phone: req.body.phone,
-        description: req.body.description,
-        logo: url + "/images/" + req.file.filename,
-        primaryColour: req.body.primaryColour,
-        secondaryColour: req.body.secondaryColour,
-      };
-
-      if (req.file.size / (1024 * 1024) > allowed_file_size) {
-        return res.status(401).json({
-          success: false,
-          message: "Logo file too large",
-        });
-      }
-
-      // Save the franchise
-      const newFranchise = await Franchise.create(franchise);
-
-      res.status(201).json({
-        success: true,
-        message: "Franchise created successfully",
-        data: newFranchise,
-      });
+    res.status(201).json({
+      success: true,
+      message: "Franchise created successfully",
+      data: newFranchise,
     });
+    // });
   } catch (err) {
     console.log(err);
-    res.status(500).json({
+    res.status(400).json({
       success: false,
       message: "Internal server error",
     });
@@ -127,14 +95,17 @@ exports.updateFranchise = async (req, res) => {
 
       const updateFields = {
         name: body.name,
+        userName: body.userName,
+        password: body.password,
         location: body.location,
         website: body.website,
         email: body.email,
-        phone: body.phone,
-        description: body.description,
-        logo: file ? url + "/images/" + file.filename : undefined,
-        primaryColour: body.primaryColour,
-        secondaryColour: body.secondaryColour,
+        primaryNumber: body.primaryNumber,
+        secondaryNumber: body.secondaryNumber,
+        remarks: body.remarks,
+        subscriptionStartDate: body.subscriptionStartDate,
+        subscriptionEndDate: body.subscriptionEndDate,
+        franchiseImage: file ? url + "/images/" + file.filename : undefined,
       };
 
       if (file.size / (1024 * 1024) > allowed_file_size) {

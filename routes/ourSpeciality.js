@@ -10,10 +10,16 @@ const {
 // Middleware
 const { protect, authorize } = require("../middleware/auth");
 const { reqFilter } = require("../middleware/filter");
+const { getS3Middleware } = require("../middleware/s3client");
+const getUploadMiddleware = require("../middleware/upload");
 
 router
   .route("/")
-  .post(createOurSpeciality)
+  .post(
+    getUploadMiddleware("uploads/ourspeciality", ["specialityImage"]),
+    getS3Middleware(["specialityImage"]),
+    createOurSpeciality
+  )
   .get(reqFilter, getOurSpeciality)
   .put(updateOurSpeciality)
   .delete(deleteOurSpeciality);

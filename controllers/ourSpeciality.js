@@ -1,51 +1,17 @@
 const { default: mongoose } = require("mongoose");
 const OurSpeciality = require("../models/ourSpeciality");
-const upload = require("../middleware/multer");
-
-const allowed_file_size = 2;
-const DIR = "./uploads/ourspeciality";
-const imageType = "image";
 
 // @desc      CREATE OUR SPECIALITY
 // @route     POST /api/v1/our-speciality
 // @access    private
-exports.createOurSpeciality = async (req, res, next) => {
+exports.createOurSpeciality = async (req, res) => {
   try {
-    const multerUpload = upload(DIR, imageType);
-    multerUpload(req, res, async function (err) {
-      if (err) {
-        return res.status(400).json({
-          success: false,
-          message: err.message,
-        });
-      }
-
-      const url = req.protocol + "://" + req.get("host");
-
-      // Create the OurSpeciality object
-      const ourSpeciality = {
-        title: req.body.title,
-        subTitle: req.body.subTitle,
-        description: req.body.description,
-        image: url + "/images/" + req.file.filename,
-        franchise: req.body.franchise,
-      };
-
-      if (req.file.size / (1024 * 1024) > allowed_file_size) {
-        return res.status(401).json({
-          success: false,
-          message: "Image too large",
-        });
-      }
-
-      // Save the OurSpeciality
-      const newOurSpeciality = await OurSpeciality.create(ourSpeciality);
-
-      res.status(201).json({
-        success: true,
-        message: "Our specialities added successfully",
-        data: newOurSpeciality,
-      });
+    // Save the OurSpeciality
+    const newOurSpeciality = await OurSpeciality.create(req.body);
+    res.status(201).json({
+      success: true,
+      message: "Our specialities added successfully",
+      data: newOurSpeciality,
     });
   } catch (err) {
     console.log("Error:", err);
@@ -55,7 +21,6 @@ exports.createOurSpeciality = async (req, res, next) => {
     });
   }
 };
-
 
 // @desc      GET OUR SPECIALITY
 // @route     GET /api/v1/our-speciality
@@ -71,9 +36,18 @@ exports.getOurSpeciality = async (req, res) => {
         response,
       });
     }
-    const query = searchkey
-      ? { ...req.filter, title: { $regex: searchkey, $options: "i" } }
-      : req.filter;
+    // const query = searchkey
+    //   ? { ...req.filter, title: { $regex: searchkey, $options: "i" } }
+    //   : req.filter;
+    const query = {
+      ...req.filter,
+      ...(searchkey && {
+        $or: [
+          { title: { $regex: searchkey, $options: "i" } },
+          { subTitle: { $regex: searchkey, $options: "i" } },
+        ],
+      }),
+    };
     const [totalCount, filterCount, data] = await Promise.all([
       parseInt(skip) === 0 && OurSpeciality.countDocuments(),
       parseInt(skip) === 0 && OurSpeciality.countDocuments(query),
@@ -103,50 +77,26 @@ exports.getOurSpeciality = async (req, res) => {
 // @route     PUT /api/v1/our-speciality
 // @access    private
 exports.updateOurSpeciality = async (req, res) => {
+  console.log(req.query)
+  console.log(req.body)
   try {
-    const multerUpload = upload(DIR, imageType);
-    multerUpload(req, res, async function (err) {
-      if (err) {
-        return res.status(400).json({
-          success: false,
-          error: err.message,
-        });
-      }
+    const { body, query } = req;
+    const { id } = query;
 
-      const { file, body, query } = req;
-      const { id } = query;
-      const url = req.protocol + "://" + req.get("host");
+    const updateFields = {
+      title: body.title,
+      subTitle: body.subTitle,
+      description: body.description,
+      specialityImage: file ? url + "/images/" + file.filename : undefined,
+      franchise: body.franchise,
+    };
 
-      if (file && file.size / (1024 * 1024) > allowed_file_size) {
-        return res.status(401).json({
-          message: "Image file is too large",
-        });
-      }
-
-
-
-      const updateFields = {
-        title: body.title,
-        subTitle: body.subTitle,
-        description: body.description,
-        image: file ? url + "/images/" + file.filename : undefined,
-        franchise: body.franchise,
-      };
-
-      if (file && file.size / (1024 * 1024) > allowed_file_size) {
-        return res.status(401).json({
-          success: false,
-          message: "Image file too large",
-        });
-      }
-
-      const response = await OurSpeciality.findByIdAndUpdate(id, updateFields);
-
-      res.status(201).json({
-        message: "Successfully updated our speciality",
-        data: response,
-      });
+    const response = await OurSpeciality.findByIdAndUpdate(body.id, updateFields);
+    res.status(201).json({
+      message: "Successfully updated our speciality",
+      data: response,
     });
+
   } catch (err) {
     console.log("Error:", err);
     res.status(500).json({

@@ -24,9 +24,6 @@ const OurProductSchema = new mongoose.Schema(
     offerPrice: {
       type: String,
     },
-    image: {
-      type: String,
-    },
     brand: {
       type: String,
     },
@@ -34,6 +31,9 @@ const OurProductSchema = new mongoose.Schema(
       type: String,
     },
     rating: {
+      type: String,
+    },
+    productImage: {
       type: String,
     },
     franchise: {

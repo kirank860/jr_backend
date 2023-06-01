@@ -11,9 +11,6 @@ const ContactUsSchema = new mongoose.Schema(
     description: {
       type: String,
     },
-    image: {
-      type: String,
-    },
     primaryAddress: {
       type: String,
     },
@@ -33,6 +30,9 @@ const ContactUsSchema = new mongoose.Schema(
       type: String,
     },
     locationUrl: {
+      type: String,
+    },
+    contactusImage: {
       type: String,
     },
     franchise: {

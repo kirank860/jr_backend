@@ -1,7 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const AboutUs = require("../models/aboutUs");
 const upload = require("../middleware/multer");
-const { query } = require("express");
 
 const allowed_file_size = 2;
 const DIR = "./uploads/aboutus";
@@ -10,47 +9,15 @@ const imageType = "image";
 // @desc      CREATE ABOUTUS
 // @route     POST /api/v1/about-us
 // @access    private
-exports.createAboutUs = async (req, res, next) => {
+exports.createAboutUs = async (req, res) => {
   try {
-    const multerUpload = upload(DIR, imageType);
-    multerUpload(req, res, async function (err) {
-      if (err) {
-        return res.status(400).json({
-          success: false,
-          message: err.message,
-        });
-      }
+    console.log(req.body)
+    const newAboutUs = await AboutUs.create(req.body);
 
-      const url = req.protocol + "://" + req.get("host");
-
-      // Create the about us object
-      const aboutUs = {
-        title: req.body.title,
-        subTitle: req.body.subTitle,
-        description: req.body.description,
-        image: url + "/images/" + req.file.filename,
-        history: req.body.history,
-        vision: req.body.vision,
-        mission: req.body.mission,
-        featuresList: req.body.featuresList,
-        franchise: req.body.franchise,
-      };
-
-      if (req.file.size / (1024 * 1024) > allowed_file_size) {
-        return res.status(401).json({
-          success: false,
-          message: "Image too large",
-        });
-      }
-
-      // Save the about us
-      const newAboutUs = (await AboutUs.create(aboutUs));
-
-      res.status(201).json({
-        success: true,
-        message: "About us added successfully",
-        data: newAboutUs,
-      });
+    res.status(201).json({
+      success: true,
+      message: "About us created successfully",
+      data: newAboutUs,
     });
   } catch (err) {
     console.log("Error:", err);
@@ -141,7 +108,7 @@ exports.updateAboutUs = async (req, res) => {
         title: body.title,
         subTitle: body.subTitle,
         description: body.description,
-        image: file ? url + "/images/" + file.filename : undefined,
+        aboutusImage: file ? url + "/images/" + file.filename : undefined,
         history: body.history,
         vision: body.vision,
         mission: body.mission,

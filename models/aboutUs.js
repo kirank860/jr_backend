@@ -11,7 +11,7 @@ const AboutUsSchema = new mongoose.Schema(
     description: {
       type: String,
     },
-    image: {
+    aboutusImage: {
       type: String,
     },
     history: {

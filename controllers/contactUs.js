@@ -9,51 +9,17 @@ const imageType = "image";
 // @desc      CREATE CONTACT US
 // @route     POST /api/v1/contact-us
 // @access    private
-exports.createContactUs = async (req, res, next) => {
+exports.createContactUs = async (req, res) => {
   try {
-    const multerUpload = upload(DIR, imageType);
-    multerUpload(req, res, async function (err) {
-      if (err) {
-        return res.status(400).json({
-          success: false,
-          message: err.message,
-        });
-      }
+    // console.log(req.body)
+    const newContactUs = await ContactUs.create(req.body);
 
-      const url = req.protocol + "://" + req.get("host");
-
-      // Create the Contact us object
-      const contactUs = {
-        title: req.body.title,
-        subTitle: req.body.subTitle,
-        description: req.body.description,
-        image: url + "/images/" + req.file.filename,
-        primaryAddress: req.body.primaryAddress,
-        secondaryAddress: req.body.secondaryAddress,
-        primaryPhone: req.body.primaryPhone,
-        secondaryPhone: req.body.secondaryPhone,
-        primaryEmail: req.body.primaryEmail,
-        secondaryEmail: req.body.secondaryEmail,
-        locationUrl: req.body.locationUrl,
-        franchise: req.body.franchise,
-      };
-
-      if (req.file.size / (1024 * 1024) > allowed_file_size) {
-        return res.status(401).json({
-          success: false,
-          message: "Image too large",
-        });
-      }
-
-      // Save the Contact us
-      const newContactUs = await ContactUs.create(contactUs);
-
-      res.status(201).json({
-        success: true,
-        message: "Contact us added successfully",
-        data: newContactUs,
-      });
+    res.status(201).json({
+      success: true,
+      message: "Contact us added successfully",
+      data: newContactUs,
     });
+
   } catch (err) {
     console.log("Error:", err);
     res.status(500).json({
@@ -149,7 +115,6 @@ exports.updateContactUs = async (req, res) => {
         title: body.title,
         subTitle: body.subTitle,
         description: body.description,
-        image: file ? url + "/images/" + file.filename : undefined,
         primaryAddress: body.primaryAddress,
         secondaryAddress: body.secondaryAddress,
         primaryPhone: body.primaryPhone,
@@ -157,6 +122,7 @@ exports.updateContactUs = async (req, res) => {
         primaryEmail: body.primaryEmail,
         secondaryEmail: body.secondaryEmail,
         locationUrl: body.locationUrl,
+        contactusImage: file ? url + "/images/" + file.filename : undefined,
         franchise: body.franchise,
       };
 
