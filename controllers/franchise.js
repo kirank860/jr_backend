@@ -35,20 +35,30 @@ exports.getFranchise = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
     if (id && mongoose.isValidObjectId(id)) {
-      const response = await Franchise.findById(id);
+      const response = await Franchise.findById(id).populate("location");
       return res.status(200).json({
         success: true,
         message: `retrieved specific Franchise`,
         response,
       });
     }
-    const query = searchkey
-      ? { ...req.filter, name: { $regex: searchkey, $options: "i" } }
-      : req.filter;
+    // const query = searchkey
+    //   ? { ...req.filter, name: { $regex: searchkey, $options: "i" } }
+    //   : req.filter;
+    const query = {
+      ...req.filter,
+      ...(searchkey && {
+        $or: [
+          { name: { $regex: searchkey, $options: "i" } },
+          { userName: { $regex: searchkey, $options: "i" } },
+          { email: { $regex: searchkey, $options: "i" } },
+        ],
+      }),
+    };
     const [totalCount, filterCount, data] = await Promise.all([
       parseInt(skip) === 0 && Franchise.countDocuments(),
       parseInt(skip) === 0 && Franchise.countDocuments(query),
-      Franchise.find(query)
+      Franchise.find(query).populate("location")
         .skip(parseInt(skip) || 0)
         .limit(parseInt(limit) || 50),
     ]);
@@ -152,6 +162,25 @@ exports.deleteFranchise = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(400).json({
+      success: false,
+      message: err,
+    });
+  }
+};
+
+// @desc      GET Franchise'S
+// @route     GET /api/v1/franchise/select
+// @access    protect
+exports.select = async (req, res) => {
+  try {
+    const items = await Franchise.find(
+      {},
+      { _id: 0, id: "$_id", value: "$name" }
+    );
+    return res.status(200).send(items);
+  } catch (err) {
+    console.log(err);
+    res.status(204).json({
       success: false,
       message: err,
     });

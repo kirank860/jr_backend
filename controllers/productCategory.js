@@ -147,3 +147,22 @@ exports.getByFranchise = async (req, res) => {
     });
   }
 };
+
+// @desc      GET Product category's
+// @route     GET /api/v1/product-category/select
+// @access    protect
+exports.select = async (req, res) => {
+  try {
+    const items = await ProductCategory.find(
+      {},
+      { _id: 0, id: "$_id", value: "$productCategory" }
+    );
+    return res.status(200).send(items);
+  } catch (err) {
+    console.log(err);
+    res.status(204).json({
+      success: false,
+      message: err,
+    });
+  }
+};

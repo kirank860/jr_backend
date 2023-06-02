@@ -123,3 +123,22 @@ exports.deleteLocation = async (req, res) => {
     });
   }
 };
+
+// @desc      GET LOCATION'S
+// @route     GET /api/v1/location/select
+// @access    protect
+exports.select = async (req, res) => {
+  try {
+    const items = await Location.find(
+      {},
+      { _id: 0, id: "$_id", value: "$location" }
+    );
+    return res.status(200).send(items);
+  } catch (err) {
+    console.log(err);
+    res.status(204).json({
+      success: false,
+      message: err,
+    });
+  }
+};

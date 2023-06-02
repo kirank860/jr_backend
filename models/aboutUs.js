@@ -33,7 +33,7 @@ const AboutUsSchema = new mongoose.Schema(
       type: String,
     },
     // FeaturesImage: {
-    //     type: String,
+    //   type: String,
     // },
     franchise: {
       type: mongoose.Schema.Types.ObjectId,
