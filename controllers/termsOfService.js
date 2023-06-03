@@ -77,8 +77,9 @@ exports.getTermsOfService = async (req, res) => {
 // @access    private
 exports.updateTermsOfService = async (req, res) => {
   try {
+    // console.log(req.body)
+    // console.log(req.query)
     const { body, query } = req;
-    const { id } = query;
 
     const updateFields = {
       title: body.title,
@@ -86,7 +87,7 @@ exports.updateTermsOfService = async (req, res) => {
       franchise: body.franchise,
     };
 
-    const response = await TermsOfService.findByIdAndUpdate(id, updateFields);
+    const response = await TermsOfService.findByIdAndUpdate(body.id, updateFields);
 
     res.status(201).json({
       message: "Successfully updated",

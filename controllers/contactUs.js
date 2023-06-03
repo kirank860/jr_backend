@@ -136,7 +136,7 @@ exports.updateContactUs = async (req, res) => {
         });
       }
 
-      const response = await ContactUs.findByIdAndUpdate(id, updateFields);
+      const response = await ContactUs.findByIdAndUpdate(body.id, updateFields);
 
       res.status(201).json({
         message: "Successfully updated contact us",

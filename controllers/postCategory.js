@@ -87,7 +87,7 @@ exports.updatePostCategory = async (req, res) => {
       franchise: body.franchise,
     };
 
-    const response = await PostCategory.findByIdAndUpdate(id, updateFields);
+    const response = await PostCategory.findByIdAndUpdate(body.id, updateFields);
 
     res.status(201).json({
       message: "Successfully updated post category",

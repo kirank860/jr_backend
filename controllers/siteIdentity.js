@@ -27,6 +27,7 @@ exports.createSiteIdentity = async (req, res) => {
         siteTitle: req.body.siteTitle,
         tagLine: req.body.tagLine,
         siteFavIcon: req.body.siteFavIcon,
+        // logo: url + "/images/" + req.file.filename,
         logo: url + "/images/" + req.file.filename,
         franchise: req.body.franchise,
       };

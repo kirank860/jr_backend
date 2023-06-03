@@ -129,7 +129,7 @@ exports.updateAboutUs = async (req, res) => {
         });
       }
 
-      const response = await AboutUs.findByIdAndUpdate(id, updateFields);
+      const response = await AboutUs.findByIdAndUpdate(body.id, updateFields);
 
       res.status(201).json({
         message: "Successfully updated about us",

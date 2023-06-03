@@ -82,7 +82,7 @@ exports.updateLocation = async (req, res) => {
       location: body.location,
     };
 
-    const response = await Location.findByIdAndUpdate(id, updateFields);
+    const response = await Location.findByIdAndUpdate(body.id, updateFields);
 
     res.status(201).json({
       message: "Successfully updated location",
