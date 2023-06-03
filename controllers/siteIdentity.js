@@ -1,7 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const SiteIdentity = require("../models/siteIdentity");
 const upload = require("../middleware/multer");
-
 const allowed_file_size = 2;
 const DIR = "./uploads/siteidentity";
 const imageType = "logo";
@@ -192,12 +191,11 @@ exports.getByFranchise = async (req, res) => {
       message: "Successfully retrieved",
       data: response,
     });
-
   } catch (err) {
     console.log("Error:", err);
     res.status(500).json({
       error: "Internal server error",
-      success: fal
+      success: fal,
     });
   }
 };

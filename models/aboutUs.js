@@ -39,16 +39,16 @@ const AboutUsSchema = new mongoose.Schema(
     //   required: true,
     // },
     featuresList: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     // FeaturesImage: {
     //     type: String,
     //     required: true,
     // },
     franchise: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "franchise"
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "franchise",
     },
   },
   { timestamps: true }

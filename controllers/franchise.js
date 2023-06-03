@@ -154,3 +154,22 @@ exports.deleteFranchise = async (req, res) => {
     });
   }
 };
+
+// @desc      GET FRANCHISE
+// @route     DELETE /api/v1/franchise/select
+// @access    protect
+exports.select = async (req, res) => {
+  try {
+    const items = await Franchise.find(
+      {},
+      { _id: 0, id: "$_id", value: "$name" }
+    );
+    return res.status(200).send(items);
+  } catch (err) {
+    console.log(err);
+    res.status(204).json({
+      success: false,
+      message: err,
+    });
+  }
+};

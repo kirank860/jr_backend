@@ -26,7 +26,6 @@ exports.createSocialMedia = async (req, res) => {
       message: "Social media created successfully",
       data: newSocialMedia,
     });
-
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -102,7 +101,6 @@ exports.updateSocialMedia = async (req, res) => {
       message: "Successfully updated social media",
       data: response,
     });
-
   } catch (err) {
     console.log("Error:", err);
     res.status(500).json({
@@ -151,7 +149,6 @@ exports.getByFranchise = async (req, res) => {
       message: "Successfully retrieved",
       data: response,
     });
-
   } catch (err) {
     console.log("Error:", err);
     res.status(500).json({
