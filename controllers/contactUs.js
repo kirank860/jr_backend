@@ -112,9 +112,13 @@ exports.updateContactUs = async (req, res) => {
 
 
       const updateFields = {
+        pageTitle: body.pageTitle,
+        pageSubTitle: body.pageSubTitle,
+        bannerImage: file ? url + "/images/" + file.filename : undefined,
         title: body.title,
         subTitle: body.subTitle,
         description: body.description,
+        contactusImage: file ? url + "/images/" + file.filename : undefined,
         primaryAddress: body.primaryAddress,
         secondaryAddress: body.secondaryAddress,
         primaryPhone: body.primaryPhone,
@@ -122,7 +126,6 @@ exports.updateContactUs = async (req, res) => {
         primaryEmail: body.primaryEmail,
         secondaryEmail: body.secondaryEmail,
         locationUrl: body.locationUrl,
-        contactusImage: file ? url + "/images/" + file.filename : undefined,
         franchise: body.franchise,
       };
 

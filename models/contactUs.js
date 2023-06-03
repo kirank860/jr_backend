@@ -2,6 +2,15 @@ const mongoose = require("mongoose");
 
 const ContactUsSchema = new mongoose.Schema(
   {
+    pageTitle: {
+      type: String,
+    },
+    pageSubTitle: {
+      type: String,
+    },
+    bannerImage: {
+      type: String,
+    },
     title: {
       type: String,
     },
@@ -9,6 +18,9 @@ const ContactUsSchema = new mongoose.Schema(
       type: String,
     },
     description: {
+      type: String,
+    },
+    contactusImage: {
       type: String,
     },
     primaryAddress: {
@@ -30,9 +42,6 @@ const ContactUsSchema = new mongoose.Schema(
       type: String,
     },
     locationUrl: {
-      type: String,
-    },
-    contactusImage: {
       type: String,
     },
     franchise: {

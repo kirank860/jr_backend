@@ -2,6 +2,15 @@ const mongoose = require("mongoose");
 
 const AboutUsSchema = new mongoose.Schema(
   {
+    pageTitle: {
+      type: String,
+    },
+    pageSubTitle: {
+      type: String,
+    },
+    bannerImage: {
+      type: String,
+    },
     title: {
       type: String,
     },
@@ -20,21 +29,21 @@ const AboutUsSchema = new mongoose.Schema(
     vision: {
       type: String,
     },
-    // visionImage: {
-    //   type: String,
-    // },
+    visionImage: {
+      type: String,
+    },
     mission: {
       type: String,
     },
-    // missionImage: {
-    //   type: String,
-    // },
+    missionImage: {
+      type: String,
+    },
     featuresList: {
       type: String,
     },
-    // FeaturesImage: {
-    //   type: String,
-    // },
+    featuresImage: {
+      type: String,
+    },
     franchise: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "franchise"

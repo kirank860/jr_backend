@@ -111,6 +111,9 @@ exports.updateOurProduct = async (req, res) => {
       }
 
       const updateFields = {
+        pageTitle: body.pageTitle,
+        pageSubTitle: body.pageSubTitle,
+        bannerImage: file ? url + "/images/" + file.filename : undefined,
         productCategory: body.productCategory,
         productSequence: body.productSequence,
         productId: body.productId,
@@ -118,10 +121,10 @@ exports.updateOurProduct = async (req, res) => {
         description: body.description,
         price: body.price,
         offerPrice: body.offerPrice,
+        productImage: file ? url + "/images/" + file.filename : undefined,
         brand: body.brand,
         features: body.features,
         rating: body.rating,
-        productImage: file ? url + "/images/" + file.filename : undefined,
         franchise: body.franchise,
       };
 

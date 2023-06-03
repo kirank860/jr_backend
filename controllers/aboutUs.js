@@ -105,14 +105,20 @@ exports.updateAboutUs = async (req, res) => {
       }
 
       const updateFields = {
+        pageTitle: body.pageTitle,
+        pageSubTitle: body.pageSubTitle,
+        bannerImage: file ? url + "/images/" + file.filename : undefined,
         title: body.title,
         subTitle: body.subTitle,
         description: body.description,
         aboutusImage: file ? url + "/images/" + file.filename : undefined,
         history: body.history,
         vision: body.vision,
+        visionImage: file ? url + "/images/" + file.filename : undefined,
         mission: body.mission,
+        missionImage: file ? url + "/images/" + file.filename : undefined,
         featuresList: body.featuresList,
+        featuresImage: file ? url + "/images/" + file.filename : undefined,
         franchise: body.franchise,
       };
 

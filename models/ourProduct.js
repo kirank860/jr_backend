@@ -2,6 +2,15 @@ const mongoose = require("mongoose");
 
 const OurProductSchema = new mongoose.Schema(
   {
+    pageTitle: {
+      type: String,
+    },
+    pageSubTitle: {
+      type: String,
+    },
+    bannerImage: {
+      type: String,
+    },
     productCategory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "productCategory"
@@ -24,6 +33,9 @@ const OurProductSchema = new mongoose.Schema(
     offerPrice: {
       type: String,
     },
+    productImage: {
+      type: String,
+    },
     brand: {
       type: String,
     },
@@ -31,9 +43,6 @@ const OurProductSchema = new mongoose.Schema(
       type: String,
     },
     rating: {
-      type: String,
-    },
-    productImage: {
       type: String,
     },
     franchise: {

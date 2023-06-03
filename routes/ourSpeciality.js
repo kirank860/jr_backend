@@ -16,8 +16,8 @@ const getUploadMiddleware = require("../middleware/upload");
 router
   .route("/")
   .post(
-    getUploadMiddleware("uploads/ourspeciality", ["specialityImage"]),
-    getS3Middleware(["specialityImage"]),
+    getUploadMiddleware("uploads/ourspeciality", ["specialityImage", "bannerImage"]),
+    getS3Middleware(["specialityImage", "bannerImage"]),
     createOurSpeciality
   )
   .get(reqFilter, getOurSpeciality)

@@ -2,6 +2,15 @@ const mongoose = require("mongoose");
 
 const ourSpecialitySchema = new mongoose.Schema(
   {
+    pageTitle: {
+      type: String,
+    },
+    pageSubTitle: {
+      type: String,
+    },
+    bannerImage: {
+      type: String,
+    },
     title: {
       type: String,
     },

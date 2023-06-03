@@ -84,6 +84,9 @@ exports.updateOurSpeciality = async (req, res) => {
     const { id } = query;
 
     const updateFields = {
+      pageTitle: body.pageTitle,
+      pageSubTitle: body.pageSubTitle,
+      bannerImage: file ? url + "/images/" + file.filename : undefined,
       title: body.title,
       subTitle: body.subTitle,
       description: body.description,
