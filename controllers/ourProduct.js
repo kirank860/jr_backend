@@ -12,7 +12,6 @@ const imageType = "image";
 exports.createOurProduct = async (req, res) => {
   try {
     const newOurProduct = await OurProduct.create(req.body);
-
     res.status(201).json({
       success: true,
       message: "Our product created successfully",
@@ -128,14 +127,14 @@ exports.updateOurProduct = async (req, res) => {
         franchise: body.franchise,
       };
 
-      if (file.size / (1024 * 1024) > allowed_file_size) {
+      if (file && file.size / (1024 * 1024) > allowed_file_size) {
         return res.status(401).json({
           success: false,
           message: "Image file too large",
         });
       }
 
-      const response = await OurProduct.findByIdAndUpdate(id, updateFields);
+      const response = await OurProduct.findByIdAndUpdate(body.id, updateFields);
 
       res.status(201).json({
         message: "Successfully updated",

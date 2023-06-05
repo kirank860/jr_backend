@@ -13,7 +13,6 @@ exports.createContactUs = async (req, res) => {
   try {
     // console.log(req.body)
     const newContactUs = await ContactUs.create(req.body);
-
     res.status(201).json({
       success: true,
       message: "Contact us added successfully",

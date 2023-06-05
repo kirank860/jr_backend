@@ -11,9 +11,8 @@ const imageType = "image";
 // @access    private
 exports.createAboutUs = async (req, res) => {
   try {
-    console.log(req.body)
+    // console.log(req.body)
     const newAboutUs = await AboutUs.create(req.body);
-
     res.status(201).json({
       success: true,
       message: "About us created successfully",

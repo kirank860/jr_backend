@@ -12,13 +12,11 @@ const imageType = "logo";
 exports.createFranchise = async (req, res) => {
   try {
     const newFranchise = await Franchise.create(req.body);
-
     res.status(201).json({
       success: true,
       message: "Franchise created successfully",
       data: newFranchise,
     });
-    // });
   } catch (err) {
     console.log(err);
     res.status(400).json({
@@ -64,7 +62,7 @@ exports.getFranchise = async (req, res) => {
     ]);
     res.status(200).json({
       success: true,
-      message: `retrieved all Franchise`,
+      message: `Retrieved all Franchise`,
       response: data,
       count: data.length,
       totalCount: totalCount || 0,
@@ -118,14 +116,14 @@ exports.updateFranchise = async (req, res) => {
         franchiseImage: file ? url + "/images/" + file.filename : undefined,
       };
 
-      if (file.size / (1024 * 1024) > allowed_file_size) {
+      if (file && file.size / (1024 * 1024) > allowed_file_size) {
         return res.status(401).json({
           success: false,
           message: "Image file too large",
         });
       }
 
-      const response = await Franchise.findByIdAndUpdate(id, updateFields);
+      const response = await Franchise.findByIdAndUpdate(body.id, updateFields);
 
       res.status(201).json({
         message: "Successfully updated",
