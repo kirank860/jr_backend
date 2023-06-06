@@ -5,8 +5,15 @@ const FranchiseSchema = new mongoose.Schema(
     name: {
       type: String,
     },
-    location: {
+    userName: {
       type: String,
+    },
+    password: {
+      type: String,
+    },
+    location: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "location"
     },
     website: {
       type: String,
@@ -14,23 +21,20 @@ const FranchiseSchema = new mongoose.Schema(
     email: {
       type: String,
     },
-    phone: {
+    primaryNumber: {
       type: String,
     },
-    description: {
+    secondaryNumber: {
       type: String,
     },
-    logo: {
+    remarks: {
       type: String,
     },
-    primaryColour: {
-      type: String,
+    subscriptionStartDate: {
+      type: Date,
     },
-    secondaryColour: {
-      type: String,
-    },
-    owner: {
-      type: String,
+    subscriptionEndDate: {
+      type: Date,
     },
     franchiseImage: {
       type: String,

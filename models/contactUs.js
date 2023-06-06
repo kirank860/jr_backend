@@ -2,53 +2,51 @@ const mongoose = require("mongoose");
 
 const ContactUsSchema = new mongoose.Schema(
   {
+    pageTitle: {
+      type: String,
+    },
+    pageSubTitle: {
+      type: String,
+    },
+    bannerImage: {
+      type: String,
+    },
     title: {
       type: String,
-      required: true,
     },
     subTitle: {
       type: String,
-      required: true,
     },
     description: {
       type: String,
-      required: true,
     },
-    image: {
+    contactusImage: {
       type: String,
-      required: true,
     },
     primaryAddress: {
       type: String,
-      required: true,
     },
     secondaryAddress: {
       type: String,
-      required: true,
     },
     primaryPhone: {
       type: String,
-      required: true,
     },
     secondaryPhone: {
       type: String,
-      required: true,
     },
     primaryEmail: {
       type: String,
-      required: true,
     },
     secondaryEmail: {
-        type: String,
-        required: true,
+      type: String,
     },
     locationUrl: {
-        type: String,
-        required: true,
+      type: String,
     },
     franchise: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "franchise"
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "franchise"
     },
   },
   { timestamps: true }

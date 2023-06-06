@@ -8,7 +8,7 @@ const imageType = "featuredImage";
 
 // @desc      CREATE POST MANAGEMENT
 // @route     POST /api/v1/post-management
-// @access    public
+// @access    private
 exports.createPostManagement = async (req, res, next) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -61,7 +61,7 @@ exports.createPostManagement = async (req, res, next) => {
 
 // @desc      GET POST MANAGEMENT
 // @route     GET /api/v1/post-management
-// @access    public
+// @access    private
 exports.getPostManagement = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -102,7 +102,7 @@ exports.getPostManagement = async (req, res) => {
 
 // @desc      UPDATE POST MANAGEMENT
 // @route     PUT /api/v1/post-management
-// @access    public
+// @access    private
 exports.updatePostManagement = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -159,7 +159,7 @@ exports.updatePostManagement = async (req, res) => {
 
 // @desc      DELETE POST MANAGEMENT
 // @route     DELETE /api/v1/post-management
-// @access    public
+// @access    private
 exports.deletePostManagement = async (req, res) => {
   try {
     const postmanagement = await PostManagement.findByIdAndDelete(req.query.id);
@@ -186,7 +186,7 @@ exports.deletePostManagement = async (req, res) => {
 
 // @desc      GET BY FRANCHISE
 // @route     GET /api/v1/post-management/get-by-postmanagement
-// @access    public
+// @access    private
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;

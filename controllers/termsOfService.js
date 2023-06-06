@@ -3,7 +3,7 @@ const TermsOfService = require("../models/termsOfService");
 
 // @desc      create Terms of service
 // @route     POST /api/v1/termsof-service
-// @access    public
+// @access    private
 exports.createTermsOfService = async (req, res, next) => {
   try {
     // Create the TermsOfService object
@@ -33,7 +33,7 @@ exports.createTermsOfService = async (req, res, next) => {
 
 // @desc      get Terms of service
 // @route     GET /api/v1/termsof-service
-// @access    public
+// @access    private
 exports.getTermsOfService = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -74,11 +74,12 @@ exports.getTermsOfService = async (req, res) => {
 
 // @desc      UPDATE TERMS OF SERVICE
 // @route     PUT /api/v1/termsof-service
-// @access    public
+// @access    private
 exports.updateTermsOfService = async (req, res) => {
   try {
+    // console.log(req.body)
+    // console.log(req.query)
     const { body, query } = req;
-    const { id } = query;
 
     const updateFields = {
       title: body.title,
@@ -86,7 +87,7 @@ exports.updateTermsOfService = async (req, res) => {
       franchise: body.franchise,
     };
 
-    const response = await TermsOfService.findByIdAndUpdate(id, updateFields);
+    const response = await TermsOfService.findByIdAndUpdate(body.id, updateFields);
 
     res.status(201).json({
       message: "Successfully updated",
@@ -103,7 +104,7 @@ exports.updateTermsOfService = async (req, res) => {
 
 // @desc      DELETE TERMS OF SERVICE
 // @route     DELETE /api/v1/termsof-service
-// @access    public
+// @access    private
 exports.deleteTermsOfService = async (req, res) => {
   try {
     const termsOfService = await TermsOfService.findByIdAndDelete(req.query.id);
@@ -130,7 +131,7 @@ exports.deleteTermsOfService = async (req, res) => {
 
 // @desc      GET BY FRANCHISE
 // @route     GET /api/v1/termsof-service/get-by-termsofservice
-// @access    public
+// @access    private
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;

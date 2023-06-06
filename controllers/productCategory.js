@@ -3,7 +3,7 @@ const ProductCategory = require("../models/productCategory");
 
 // @desc      CREATE PRODUCT CATEGORY
 // @route     POST /api/v1/product-category
-// @access    public
+// @access    private
 exports.createProductCategory = async (req, res, next) => {
   try {
     // Create the ProductCategory object
@@ -32,7 +32,7 @@ exports.createProductCategory = async (req, res, next) => {
 
 // @desc      GET PRODUCT CATEGORY
 // @route     GET /api/v1/product-category
-// @access    public
+// @access    private
 exports.getProductCategory = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -73,7 +73,7 @@ exports.getProductCategory = async (req, res) => {
 
 // @desc      UPDATE PRODUCT CATEGORY
 // @route     PUT /api/v1/product-category
-// @access    public
+// @access    private
 exports.updateProductCategory = async (req, res) => {
   try {
     const { body, query } = req;
@@ -101,7 +101,7 @@ exports.updateProductCategory = async (req, res) => {
 
 // @desc      delete Product category
 // @route     DELETE /api/v1/product-category
-// @access    public
+// @access    private
 exports.deleteProductCategory = async (req, res) => {
   try {
     const productcategory = await ProductCategory.findByIdAndDelete(req.query.id);
@@ -128,7 +128,7 @@ exports.deleteProductCategory = async (req, res) => {
 
 // @desc      GET BY FRANCHISE
 // @route     GET /api/v1/product-category/get-by-productcategory
-// @access    public
+// @access    private
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;
@@ -144,6 +144,25 @@ exports.getByFranchise = async (req, res) => {
     res.status(500).json({
       error: "Internal server error",
       success: false,
+    });
+  }
+};
+
+// @desc      GET Product category's
+// @route     GET /api/v1/product-category/select
+// @access    protect
+exports.select = async (req, res) => {
+  try {
+    const items = await ProductCategory.find(
+      {},
+      { _id: 0, id: "$_id", value: "$productCategory" }
+    );
+    return res.status(200).send(items);
+  } catch (err) {
+    console.log(err);
+    res.status(204).json({
+      success: false,
+      message: err,
     });
   }
 };

@@ -3,7 +3,7 @@ const Location = require("../models/location");
 
 // @desc      CREATE LOCATION
 // @route     POST /api/v1/location
-// @access    public
+// @access    private
 exports.createLocation = async (req, res, next) => {
   try {
     // Create the Location object
@@ -31,7 +31,7 @@ exports.createLocation = async (req, res, next) => {
 
 // @desc      GET LOCATION
 // @route     GET /api/v1/location
-// @access    public
+// @access    private
 exports.getLocation = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -72,7 +72,7 @@ exports.getLocation = async (req, res) => {
 
 // @desc      UPDATE LOCATION
 // @route     PUT /api/v1/location
-// @access    public
+// @access    private
 exports.updateLocation = async (req, res) => {
   try {
     const { body, query } = req;
@@ -82,7 +82,7 @@ exports.updateLocation = async (req, res) => {
       location: body.location,
     };
 
-    const response = await Location.findByIdAndUpdate(id, updateFields);
+    const response = await Location.findByIdAndUpdate(body.id, updateFields);
 
     res.status(201).json({
       message: "Successfully updated location",
@@ -99,7 +99,7 @@ exports.updateLocation = async (req, res) => {
 
 // @desc      DELETE LOCATION
 // @route     DELETE /api/v1/location
-// @access    public
+// @access    private
 exports.deleteLocation = async (req, res) => {
   try {
     const location = await Location.findByIdAndDelete(req.query.id);
@@ -118,6 +118,25 @@ exports.deleteLocation = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(400).json({
+      success: false,
+      message: err,
+    });
+  }
+};
+
+// @desc      GET LOCATION'S
+// @route     GET /api/v1/location/select
+// @access    protect
+exports.select = async (req, res) => {
+  try {
+    const items = await Location.find(
+      {},
+      { _id: 0, id: "$_id", value: "$location" }
+    );
+    return res.status(200).send(items);
+  } catch (err) {
+    console.log(err);
+    res.status(204).json({
       success: false,
       message: err,
     });

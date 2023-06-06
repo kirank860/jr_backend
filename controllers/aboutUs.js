@@ -1,7 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const AboutUs = require("../models/aboutUs");
 const upload = require("../middleware/multer");
-const { query } = require("express");
 
 const allowed_file_size = 2;
 const DIR = "./uploads/aboutus";
@@ -9,48 +8,16 @@ const imageType = "image";
 
 // @desc      CREATE ABOUTUS
 // @route     POST /api/v1/about-us
-// @access    public
-exports.createAboutUs = async (req, res, next) => {
+// @access    private
+exports.createAboutUs = async (req, res) => {
   try {
-    const multerUpload = upload(DIR, imageType);
-    multerUpload(req, res, async function (err) {
-      if (err) {
-        return res.status(400).json({
-          success: false,
-          message: err.message,
-        });
-      }
+    console.log(req.body);
+    const newAboutUs = await AboutUs.create(req.body);
 
-      const url = req.protocol + "://" + req.get("host");
-
-      // Create the about us object
-      const aboutUs = {
-        title: req.body.title,
-        subTitle: req.body.subTitle,
-        description: req.body.description,
-        image: url + "/images/" + req.file.filename,
-        history: req.body.history,
-        vision: req.body.vision,
-        mission: req.body.mission,
-        featuresList: req.body.featuresList,
-        franchise: req.body.franchise,
-      };
-
-      if (req.file.size / (1024 * 1024) > allowed_file_size) {
-        return res.status(401).json({
-          success: false,
-          message: "Image too large",
-        });
-      }
-
-      // Save the about us
-      const newAboutUs = (await AboutUs.create(aboutUs));
-
-      res.status(201).json({
-        success: true,
-        message: "About us added successfully",
-        data: newAboutUs,
-      });
+    res.status(201).json({
+      success: true,
+      message: "About us created successfully",
+      data: newAboutUs,
     });
   } catch (err) {
     console.log("Error:", err);
@@ -61,10 +28,9 @@ exports.createAboutUs = async (req, res, next) => {
   }
 };
 
-
 // @desc      GET ABOUTUS
 // @route     GET /api/v1/about-us
-// @access    public
+// @access    private
 exports.getAboutUs = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -76,13 +42,24 @@ exports.getAboutUs = async (req, res) => {
         response,
       });
     }
-    const query = searchkey
-      ? { ...req.filter, title: { $regex: searchkey, $options: "i" } }
-      : req.filter;
+    // const query = searchkey
+    //   ? { ...req.filter, title: { $regex: searchkey, $options: "i" } }
+    //   : req.filter;
+    const query = {
+      ...req.filter,
+      ...(searchkey && {
+        $or: [
+          { title: { $regex: searchkey, $options: "i" } },
+          { subTitle: { $regex: searchkey, $options: "i" } },
+        ],
+      }),
+    };
+
     const [totalCount, filterCount, data] = await Promise.all([
       parseInt(skip) === 0 && AboutUs.countDocuments(),
       parseInt(skip) === 0 && AboutUs.countDocuments(query),
-      AboutUs.find(query).populate("franchise")
+      AboutUs.find(query)
+        .populate("franchise")
         .skip(parseInt(skip) || 0)
         .limit(parseInt(limit) || 50),
     ]);
@@ -105,7 +82,7 @@ exports.getAboutUs = async (req, res) => {
 
 // @desc      UPDATE ABOUTUS
 // @route     PUT /api/v1/about-us
-// @access    public
+// @access    private
 exports.updateAboutUs = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -128,14 +105,20 @@ exports.updateAboutUs = async (req, res) => {
       }
 
       const updateFields = {
+        pageTitle: body.pageTitle,
+        pageSubTitle: body.pageSubTitle,
+        bannerImage: file ? url + "/images/" + file.filename : undefined,
         title: body.title,
         subTitle: body.subTitle,
         description: body.description,
-        image: file ? url + "/images/" + file.filename : undefined,
+        aboutusImage: file ? url + "/images/" + file.filename : undefined,
         history: body.history,
         vision: body.vision,
+        visionImage: file ? url + "/images/" + file.filename : undefined,
         mission: body.mission,
+        missionImage: file ? url + "/images/" + file.filename : undefined,
         featuresList: body.featuresList,
+        featuresImage: file ? url + "/images/" + file.filename : undefined,
         franchise: body.franchise,
       };
 
@@ -146,7 +129,7 @@ exports.updateAboutUs = async (req, res) => {
         });
       }
 
-      const response = await AboutUs.findByIdAndUpdate(id, updateFields);
+      const response = await AboutUs.findByIdAndUpdate(body.id, updateFields);
 
       res.status(201).json({
         message: "Successfully updated about us",
@@ -164,7 +147,7 @@ exports.updateAboutUs = async (req, res) => {
 
 // @desc      DELETE ABOUTUS
 // @route     DELETE /api/v1/about-us
-// @access    public
+// @access    private
 exports.deleteAboutUs = async (req, res) => {
   try {
     const aboutus = await AboutUs.findByIdAndDelete(req.query.id);
@@ -191,7 +174,7 @@ exports.deleteAboutUs = async (req, res) => {
 
 // @desc      GET BY FRANCHISE
 // @route     GET /api/v1/about-us/get-by-aboutus
-// @access    public
+// @access    private
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;
@@ -201,7 +184,6 @@ exports.getByFranchise = async (req, res) => {
       message: "Successfully retrieved",
       data: response,
     });
-
   } catch (err) {
     console.log("Error:", err);
     res.status(500).json({

@@ -2,25 +2,30 @@ const mongoose = require("mongoose");
 
 const ourSpecialitySchema = new mongoose.Schema(
   {
+    pageTitle: {
+      type: String,
+    },
+    pageSubTitle: {
+      type: String,
+    },
+    bannerImage: {
+      type: String,
+    },
     title: {
       type: String,
-      required: true,
     },
     subTitle: {
       type: String,
-      required: true,
     },
     description: {
       type: String,
-      required: true,
     },
-    image: {
+    specialityImage: {
       type: String,
-      required: true,
     },
     franchise: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "franchise"
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "franchise"
     },
   },
   { timestamps: true }

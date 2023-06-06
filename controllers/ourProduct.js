@@ -8,51 +8,15 @@ const imageType = "image";
 
 // @desc      CREATE OUR PRODUCT
 // @route     POST /api/v1/our-product
-// @access    protect
+// @access    private
 exports.createOurProduct = async (req, res) => {
   try {
-    const multerUpload = upload(DIR, imageType);
-    multerUpload(req, res, async function (err) {
-      if (err) {
-        return res.status(400).json({
-          success: false,
-          message: err.message,
-        });
-      }
+    const newOurProduct = await OurProduct.create(req.body);
 
-      const url = req.protocol + "://" + req.get("host");
-
-      // Create the OurProduct object
-      const ourproduct = {
-        productCategory: req.body.productCategory,
-        productSequence: req.body.productSequence,
-        productId: req.body.productId,
-        name: req.body.name,
-        description: req.body.description,
-        price: req.body.price,
-        offerPrice: req.body.offerPrice,
-        image: url + "/images/" + req.file.filename,
-        brand: req.body.brand,
-        features: req.body.features,
-        rating: req.body.rating,
-        franchise: req.body.franchise,
-      };
-
-      if (req.file.size / (1024 * 1024) > allowed_file_size) {
-        return res.status(401).json({
-          success: false,
-          message: "Image file too large",
-        });
-      }
-
-      // Save the OurProduct
-      const newOurProduct = await OurProduct.create(ourproduct);
-
-      res.status(201).json({
-        success: true,
-        message: "Our product created successfully",
-        data: newOurProduct,
-      });
+    res.status(201).json({
+      success: true,
+      message: "Our product created successfully",
+      data: newOurProduct,
     });
   } catch (err) {
     console.log(err);
@@ -65,7 +29,7 @@ exports.createOurProduct = async (req, res) => {
 
 // @desc      GET OUR PRODUCT
 // @route     GET /api/v1/our-product/:id
-// @access    protect
+// @access    private
 exports.getOurProduct = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -79,9 +43,22 @@ exports.getOurProduct = async (req, res) => {
         response,
       });
     }
-    const query = searchkey
-      ? { ...req.filter, price: { $regex: searchkey, $options: "i" } }
-      : req.filter;
+    // const query = searchkey
+    //   ? { ...req.filter, price: { $regex: searchkey, $options: "i" } }
+    //   : req.filter;
+    const query = {
+      ...req.filter,
+      ...(searchkey && {
+        $or: [
+          { productSequence: { $regex: searchkey, $options: "i" } },
+          { productId: { $regex: searchkey, $options: "i" } },
+          { name: { $regex: searchkey, $options: "i" } },
+          { price: { $regex: searchkey, $options: "i" } },
+          { offerPrice: { $regex: searchkey, $options: "i" } },
+          { brand: { $regex: searchkey, $options: "i" } },
+        ],
+      }),
+    };
     const [totalCount, filterCount, data] = await Promise.all([
       parseInt(skip) === 0 && OurProduct.countDocuments(),
       parseInt(skip) === 0 && OurProduct.countDocuments(query),
@@ -110,7 +87,7 @@ exports.getOurProduct = async (req, res) => {
 
 // @desc      UPDATE SPECIFIC OUR PRODUCT
 // @route     PUT /api/v1/our-product/:id
-// @access    protect
+// @access    private
 exports.updateOurProduct = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -133,6 +110,9 @@ exports.updateOurProduct = async (req, res) => {
       }
 
       const updateFields = {
+        pageTitle: body.pageTitle,
+        pageSubTitle: body.pageSubTitle,
+        bannerImage: file ? url + "/images/" + file.filename : undefined,
         productCategory: body.productCategory,
         productSequence: body.productSequence,
         productId: body.productId,
@@ -140,7 +120,7 @@ exports.updateOurProduct = async (req, res) => {
         description: body.description,
         price: body.price,
         offerPrice: body.offerPrice,
-        image: file ? url + "/images/" + file.filename : undefined,
+        productImage: file ? url + "/images/" + file.filename : undefined,
         brand: body.brand,
         features: body.features,
         rating: body.rating,
@@ -172,7 +152,7 @@ exports.updateOurProduct = async (req, res) => {
 
 // @desc      DELETE SPECIFIC OUR PRODUCT
 // @route     DELETE /api/v1/our-product/:id
-// @access    protect
+// @access    private
 exports.deleteOurProduct = async (req, res) => {
   try {
     const ourproduct = await OurProduct.findByIdAndDelete(req.query.id);
@@ -199,7 +179,7 @@ exports.deleteOurProduct = async (req, res) => {
 
 // @desc      GET BY FRANCHISE
 // @route     GET /api/v1/our-product/get-by-ourproduct
-// @access    public
+// @access    private
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;
@@ -209,7 +189,6 @@ exports.getByFranchise = async (req, res) => {
       message: "Successfully retrieved",
       data: response,
     });
-
   } catch (err) {
     console.log("Error:", err);
     res.status(500).json({

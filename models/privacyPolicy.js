@@ -4,15 +4,13 @@ const PrivacyPolicySchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true,
     },
     description: {
       type: String,
-      required: true,
     },
     franchise: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "franchise"
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "franchise"
     },
   },
   { timestamps: true }

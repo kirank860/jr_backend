@@ -3,7 +3,7 @@ const SubMenu = require("../models/subMenu");
 
 //@desc ADD SUB MENU
 //@route POST/api/v1/sub-menu
-//@access public
+//@access private
 exports.addSubMenu = async (req, res) => {
   try {
     const response = await SubMenu.create(req.body);
@@ -23,7 +23,7 @@ exports.addSubMenu = async (req, res) => {
 
 // @desc      GET SPECIFIC SUB MENU
 // @route     GET /api/v1/sub-menu
-// @access    public
+// @access    private
 exports.getSubMenu = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -67,7 +67,7 @@ exports.getSubMenu = async (req, res) => {
 
 // @desc      UPDATE SPECIFIC SUB MENU
 // @route     PUT /api/v1/sub-menu
-// @access    public
+// @access    private
 exports.updateSubMenu = async (req, res) => {
   try {
     const { id } = req.body;
@@ -88,7 +88,7 @@ exports.updateSubMenu = async (req, res) => {
 
 // @desc      DELETE SPECIFIC SUB MENU
 // @route     DELETE /api/v1/sub-menu
-// @access    public
+// @access    private
 exports.deleteSubMenu = async (req, res) => {
   try {
     const { id } = req.query;

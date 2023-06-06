@@ -8,7 +8,7 @@ const imageType = "logo";
 
 // @desc      CREATE NEW FRANCHISE
 // @route     POST /api/v1/franchises
-// @access    protect
+// @access    private
 exports.createFranchise = async (req, res) => {
   try {
     const newFranchise = await Franchise.create(req.body);
@@ -30,25 +30,36 @@ exports.createFranchise = async (req, res) => {
 
 // @desc      GET FRANCHISE
 // @route     GET /api/v1/franchises/:id
-// @access    protect
+// @access    private
 exports.getFranchise = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
     if (id && mongoose.isValidObjectId(id)) {
-      const response = await Franchise.findById(id);
+      const response = await Franchise.findById(id).populate("location");
       return res.status(200).json({
         success: true,
         message: `retrieved specific Franchise`,
         response,
       });
     }
-    const query = searchkey
-      ? { ...req.filter, name: { $regex: searchkey, $options: "i" } }
-      : req.filter;
+    // const query = searchkey
+    //   ? { ...req.filter, name: { $regex: searchkey, $options: "i" } }
+    //   : req.filter;
+    const query = {
+      ...req.filter,
+      ...(searchkey && {
+        $or: [
+          { name: { $regex: searchkey, $options: "i" } },
+          { userName: { $regex: searchkey, $options: "i" } },
+          { email: { $regex: searchkey, $options: "i" } },
+        ],
+      }),
+    };
     const [totalCount, filterCount, data] = await Promise.all([
       parseInt(skip) === 0 && Franchise.countDocuments(),
       parseInt(skip) === 0 && Franchise.countDocuments(query),
       Franchise.find(query)
+        .populate("location")
         .skip(parseInt(skip) || 0)
         .limit(parseInt(limit) || 50),
     ]);
@@ -71,7 +82,7 @@ exports.getFranchise = async (req, res) => {
 
 // @desc      UPDATE SPECIFIC FRANCHISE
 // @route     PUT /api/v1/franchises/:id
-// @access    protect
+// @access    private
 exports.updateFranchise = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -95,14 +106,17 @@ exports.updateFranchise = async (req, res) => {
 
       const updateFields = {
         name: body.name,
+        userName: body.userName,
+        password: body.password,
         location: body.location,
         website: body.website,
         email: body.email,
-        phone: body.phone,
-        description: body.description,
-        logo: file ? url + "/images/" + file.filename : undefined,
-        primaryColour: body.primaryColour,
-        secondaryColour: body.secondaryColour,
+        primaryNumber: body.primaryNumber,
+        secondaryNumber: body.secondaryNumber,
+        remarks: body.remarks,
+        subscriptionStartDate: body.subscriptionStartDate,
+        subscriptionEndDate: body.subscriptionEndDate,
+        franchiseImage: file ? url + "/images/" + file.filename : undefined,
       };
 
       if (file.size / (1024 * 1024) > allowed_file_size) {
@@ -130,7 +144,7 @@ exports.updateFranchise = async (req, res) => {
 
 // @desc      DELETE SPECIFIC FRANCHISE
 // @route     DELETE /api/v1/franchises/:id
-// @access    protect
+// @access    private
 exports.deleteFranchise = async (req, res) => {
   try {
     const franchise = await Franchise.findByIdAndDelete(req.query.id);
@@ -155,8 +169,8 @@ exports.deleteFranchise = async (req, res) => {
   }
 };
 
-// @desc      GET FRANCHISE
-// @route     DELETE /api/v1/franchise/select
+// @desc      GET Franchise'S
+// @route     GET /api/v1/franchise/select
 // @access    protect
 exports.select = async (req, res) => {
   try {

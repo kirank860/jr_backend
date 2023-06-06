@@ -1,51 +1,23 @@
 const { default: mongoose } = require("mongoose");
 const SiteIdentity = require("../models/siteIdentity");
 const upload = require("../middleware/multer");
+
 const allowed_file_size = 2;
 const DIR = "./uploads/siteidentity";
-const imageType = "logo";
+const imageType = "image";
 
-// @desc      CREATE SITE IDENTITY
-// @route     POST /api/v1/site-identity
-// @access    protect
+// @desc      CREATE OUR PRODUCT
+// @route     POST /api/v1/our-product
+// @access    private
 exports.createSiteIdentity = async (req, res) => {
   try {
-    const multerUpload = upload(DIR, imageType);
-    multerUpload(req, res, async function (err) {
-      if (err) {
-        return res.status(400).json({
-          success: false,
-          message: err.message,
-        });
-      }
-
-      const url = req.protocol + "://" + req.get("host");
-
-      // Create the SiteIdentity object
-      const siteidentity = {
-        siteTitle: req.body.siteTitle,
-        tagLine: req.body.tagLine,
-        siteFavIcon: req.body.siteFavIcon,
-        logo: url + "/images/" + req.file.filename,
-        franchise: req.body.franchise,
-      };
-
-      if (req.file.size / (1024 * 1024) > allowed_file_size) {
-        return res.status(401).json({
-          success: false,
-          message: "Logo file too large",
-        });
-      }
-
-      // Save the SiteIdentity
-      const newSiteIdentity = await SiteIdentity.create(siteidentity);
-
-      res.status(201).json({
-        success: true,
-        message: "Site identity created successfully",
-        data: newSiteIdentity,
-      });
+    const newSiteIdentity = await SiteIdentity.create(req.body);
+    res.status(201).json({
+      success: true,
+      message: "Site Identity created successfully",
+      data: newSiteIdentity,
     });
+    console.log("data is::::", newSiteIdentity);
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -55,9 +27,9 @@ exports.createSiteIdentity = async (req, res) => {
   }
 };
 
-// @desc      GET SITE IDENTITY
-// @route     GET /api/v1/site-identity/:id
-// @access    protect
+// @desc      GET OUR PRODUCT
+// @route     GET /api/v1/our-product/:id
+// @access    private
 exports.getSiteIdentity = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -65,13 +37,22 @@ exports.getSiteIdentity = async (req, res) => {
       const response = await SiteIdentity.findById(id).populate("franchise");
       return res.status(200).json({
         success: true,
-        message: `Retrieved specific site identity`,
+        message: `Retrieved specific Site Identity`,
         response,
       });
     }
-    const query = searchkey
-      ? { ...req.filter, siteTitle: { $regex: searchkey, $options: "i" } }
-      : req.filter;
+    // const query = searchkey
+    //   ? { ...req.filter, price: { $regex: searchkey, $options: "i" } }
+    //   : req.filter;
+    const query = {
+      ...req.filter,
+      ...(searchkey && {
+        $or: [
+          { siteTitle: { $regex: searchkey, $options: "i" } },
+          { tagLine: { $regex: searchkey, $options: "i" } },
+        ],
+      }),
+    };
     const [totalCount, filterCount, data] = await Promise.all([
       parseInt(skip) === 0 && SiteIdentity.countDocuments(),
       parseInt(skip) === 0 && SiteIdentity.countDocuments(query),
@@ -97,9 +78,9 @@ exports.getSiteIdentity = async (req, res) => {
   }
 };
 
-// @desc      UPDATE SPECIFIC SITE IDENTITY
-// @route     PUT /api/v1/site-identity/:id
-// @access    protect
+// @desc      UPDATE SPECIFIC OUR PRODUCT
+// @route     PUT /api/v1/our-product/:id
+// @access    private
 exports.updateSiteIdentity = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -139,7 +120,7 @@ exports.updateSiteIdentity = async (req, res) => {
       const response = await SiteIdentity.findByIdAndUpdate(id, updateFields);
 
       res.status(201).json({
-        message: "Successfully updated site identity",
+        message: "Successfully updated",
         data: response,
       });
     });
@@ -152,23 +133,23 @@ exports.updateSiteIdentity = async (req, res) => {
   }
 };
 
-// @desc      DELETE SPECIFIC SITE IDENTITY
-// @route     DELETE /api/v1/site-identity/:id
-// @access    protect
+// @desc      DELETE SPECIFIC OUR PRODUCT
+// @route     DELETE /api/v1/our-product/:id
+// @access    private
 exports.deleteSiteIdentity = async (req, res) => {
   try {
-    const siteidentity = await SiteIdentity.findByIdAndDelete(req.query.id);
+    const siteIdentity = await SiteIdentity.findByIdAndDelete(req.query.id);
 
-    if (!siteidentity) {
+    if (!siteIdentity) {
       return res.status(404).json({
         success: false,
-        message: "Site identity not found",
+        message: "Our product not found",
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Site identity deleted successfully",
+      message: "Our product deleted successfully",
     });
   } catch (err) {
     console.log(err);
@@ -180,8 +161,8 @@ exports.deleteSiteIdentity = async (req, res) => {
 };
 
 // @desc      GET BY FRANCHISE
-// @route     GET /api/v1/site-identity/get-by-siteidentity
-// @access    public
+// @route     GET /api/v1/our-product/get-by-ourproduct
+// @access    private
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;
@@ -195,7 +176,7 @@ exports.getByFranchise = async (req, res) => {
     console.log("Error:", err);
     res.status(500).json({
       error: "Internal server error",
-      success: fal,
+      success: false,
     });
   }
 };
