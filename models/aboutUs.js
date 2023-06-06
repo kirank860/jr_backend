@@ -40,13 +40,11 @@ const AboutUsSchema = new mongoose.Schema(
     },
     featuresList: {
       type: String,
-    },
-    featuresImage: {
-      type: String,
+      required: true,
     },
     franchise: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "franchise"
+      ref: "franchise",
     },
   },
   { timestamps: true }

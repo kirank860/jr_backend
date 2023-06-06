@@ -11,7 +11,6 @@ const imageType = "image";
 // @access    private
 exports.createAboutUs = async (req, res) => {
   try {
-    // console.log(req.body)
     const newAboutUs = await AboutUs.create(req.body);
     res.status(201).json({
       success: true,
@@ -26,7 +25,6 @@ exports.createAboutUs = async (req, res) => {
     });
   }
 };
-
 
 // @desc      GET ABOUTUS
 // @route     GET /api/v1/about-us
@@ -58,7 +56,8 @@ exports.getAboutUs = async (req, res) => {
     const [totalCount, filterCount, data] = await Promise.all([
       parseInt(skip) === 0 && AboutUs.countDocuments(),
       parseInt(skip) === 0 && AboutUs.countDocuments(query),
-      AboutUs.find(query).populate("franchise")
+      AboutUs.find(query)
+        .populate("franchise")
         .skip(parseInt(skip) || 0)
         .limit(parseInt(limit) || 50),
     ]);
@@ -183,7 +182,6 @@ exports.getByFranchise = async (req, res) => {
       message: "Successfully retrieved",
       data: response,
     });
-
   } catch (err) {
     console.log("Error:", err);
     res.status(500).json({

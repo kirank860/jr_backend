@@ -17,7 +17,6 @@ exports.createOurProduct = async (req, res) => {
       message: "Our product created successfully",
       data: newOurProduct,
     });
-
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -189,7 +188,6 @@ exports.getByFranchise = async (req, res) => {
       message: "Successfully retrieved",
       data: response,
     });
-
   } catch (err) {
     console.log("Error:", err);
     res.status(500).json({

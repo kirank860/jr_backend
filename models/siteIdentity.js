@@ -16,7 +16,7 @@ const SiteIdentitySchema = new mongoose.Schema(
     },
     franchise: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "franchise"
+      ref: "franchise",
     },
   },
   { timestamps: true }

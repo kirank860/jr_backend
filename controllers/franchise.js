@@ -56,7 +56,8 @@ exports.getFranchise = async (req, res) => {
     const [totalCount, filterCount, data] = await Promise.all([
       parseInt(skip) === 0 && Franchise.countDocuments(),
       parseInt(skip) === 0 && Franchise.countDocuments(query),
-      Franchise.find(query).populate("location")
+      Franchise.find(query)
+        .populate("location")
         .skip(parseInt(skip) || 0)
         .limit(parseInt(limit) || 50),
     ]);
