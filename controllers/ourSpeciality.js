@@ -82,56 +82,14 @@ exports.getOurSpeciality = async (req, res) => {
 // @route     PUT /api/v1/our-speciality
 // @access    private
 exports.updateOurSpeciality = async (req, res) => {
-  // console.log(req.query)
-  // console.log(req.body)
   try {
-    // const { file, body, query } = req;
-    // const { id } = query;
-
-    const multerUpload = upload(DIR, imageType);
-    multerUpload(req, res, async function (err) {
-      if (err) {
-        return res.status(400).json({
-          success: false,
-          error: err.message,
-        });
-      }
-
-      const { file, body, query } = req;
-      const { id } = query;
-      const url = req.protocol + "://" + req.get("host");
-
-      if (file && file.size / (1024 * 1024) > allowed_file_size) {
-        return res.status(401).json({
-          message: "Image file is too large",
-        });
-      }
-
-      const updateFields = {
-        pageTitle: body.pageTitle,
-        pageSubTitle: body.pageSubTitle,
-        // bannerImage: file ? url + "/images/" + file.filename : undefined,
-        bannerImage: file ? url + "/images/" + file.filename : undefined,
-        title: body.title,
-        subTitle: body.subTitle,
-        description: body.description,
-        // specialityImage: file ? url + "/images/" + file.filename : undefined,
-        specialityImage: file ? url + "/images/" + file.filename : undefined,
-        franchise: body.franchise,
-      };
-
-      if (file && file.size / (1024 * 1024) > allowed_file_size) {
-        return res.status(401).json({
-          success: false,
-          message: "Image file too large",
-        });
-      }
-
-      const response = await OurSpeciality.findByIdAndUpdate(body.id, updateFields);
-      res.status(201).json({
-        message: "Successfully updated our speciality",
-        data: response,
-      });
+    const response = await OurSpeciality.findByIdAndUpdate(
+      req.body.id,
+      req.body
+    );
+    res.status(201).json({
+      message: "Successfully updated our speciality",
+      data: response,
     });
   } catch (err) {
     console.log("Error:", err);
@@ -181,7 +139,6 @@ exports.getByFranchise = async (req, res) => {
       message: "Successfully retrieved",
       data: response,
     });
-
   } catch (err) {
     console.log("Error:", err);
     res.status(500).json({

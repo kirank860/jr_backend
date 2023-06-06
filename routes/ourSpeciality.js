@@ -13,15 +13,24 @@ const { reqFilter } = require("../middleware/filter");
 const { getS3Middleware } = require("../middleware/s3client");
 const getUploadMiddleware = require("../middleware/upload");
 
+const uploadMiddleware = getUploadMiddleware("uploads/ourspeciality", [
+  "specialityImage",
+  "bannerImage",
+]);
+
 router
   .route("/")
   .post(
-    getUploadMiddleware("uploads/ourspeciality", ["specialityImage", "bannerImage"]),
+    uploadMiddleware,
     getS3Middleware(["specialityImage", "bannerImage"]),
     createOurSpeciality
   )
   .get(reqFilter, getOurSpeciality)
-  .put(updateOurSpeciality)
+  .put(
+    uploadMiddleware,
+    getS3Middleware(["specialityImage", "bannerImage"]),
+    updateOurSpeciality
+  )
   .delete(deleteOurSpeciality);
 
 router.get("/get-by-ourspeciality", getByFranchise);
