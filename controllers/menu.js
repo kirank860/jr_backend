@@ -3,7 +3,7 @@ const Menu = require("../models/menu");
 
 //@desc ADD MENU
 //@route POST/api/v1/menu
-//@access public
+//@access private
 exports.addMenu = async (req, res) => {
   try {
     const response = await Menu.create(req.body);
@@ -23,7 +23,7 @@ exports.addMenu = async (req, res) => {
 
 // @desc      GET ALL MENU & GET SPECIFIC MENU
 // @route     GET /api/v1/menu
-// @access    public
+// @access    private
 exports.getMenu = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -68,7 +68,7 @@ exports.getMenu = async (req, res) => {
 
 // @desc      UPDATE SPECIFIC MENU
 // @route     PUT /api/v1/menu
-// @access    public
+// @access    private
 exports.updateMenu = async (req, res) => {
   try {
     const { id } = req.body;
@@ -89,7 +89,7 @@ exports.updateMenu = async (req, res) => {
 
 // @desc      DELETE SPECIFIC MENU
 // @route     DELETE /api/v1/menu
-// @access    public
+// @access    private
 exports.deleteMenu = async (req, res) => {
   try {
     const { id } = req.query;

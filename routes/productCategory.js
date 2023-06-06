@@ -6,6 +6,7 @@ const {
   updateProductCategory,
   deleteProductCategory,
   getByFranchise,
+  select,
 } = require("../controllers/productCategory");
 // Middleware
 const { protect, authorize } = require("../middleware/auth");
@@ -19,5 +20,7 @@ router
   .delete(deleteProductCategory);
 
 router.get("/get-by-productcategory", getByFranchise);
+
+router.get("/select", reqFilter, select);
 
 module.exports = router;

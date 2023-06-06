@@ -8,7 +8,7 @@ const imageType = "image";
 
 // @desc      CREATE TESTIMONIAL
 // @route     POST /api/v1/testimonial
-// @access    public
+// @access    private
 exports.createTestimonial = async (req, res, next) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -60,7 +60,7 @@ exports.createTestimonial = async (req, res, next) => {
 
 // @desc      GET TESTIMONIAL
 // @route     GET /api/v1/testimonial
-// @access    public
+// @access    private
 exports.getTestimonial = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -101,7 +101,7 @@ exports.getTestimonial = async (req, res) => {
 
 // @desc      UPDATE TESTIMONIAL
 // @route     PUT /api/v1/testimonial
-// @access    public
+// @access    private
 exports.updateTestimonial = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -158,7 +158,7 @@ exports.updateTestimonial = async (req, res) => {
 
 // @desc      delete Testimonial
 // @route     DELETE /api/v1/testimonial
-// @access    public
+// @access    private
 exports.deleteTestimonial = async (req, res) => {
   try {
     const testimonial = await Testimonial.findByIdAndDelete(req.query.id);
@@ -185,7 +185,7 @@ exports.deleteTestimonial = async (req, res) => {
 
 // @desc      GET BY FRANCHISE
 // @route     GET /api/v1/testimonial/get-by-testimonial
-// @access    public
+// @access    private
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;

@@ -8,7 +8,7 @@ const imageType = "clientLogo";
 
 // @desc      CREATE OUR CLIENT
 // @route     POST /api/v1/our-client
-// @access    public
+// @access    private
 exports.createOurClient = async (req, res, next) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -57,7 +57,7 @@ exports.createOurClient = async (req, res, next) => {
 
 // @desc      GET OUR CLIENT
 // @route     GET /api/v1/our-client
-// @access    public
+// @access    private
 exports.getOurClient = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -98,7 +98,7 @@ exports.getOurClient = async (req, res) => {
 
 // @desc      UPDATE OUR CLIENT
 // @route     PUT /api/v1/our-client
-// @access    public
+// @access    private
 exports.updateOurClient = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -153,7 +153,7 @@ exports.updateOurClient = async (req, res) => {
 
 // @desc      DELETE OUR CLIENT
 // @route     DELETE /api/v1/our-client
-// @access    public
+// @access    private
 exports.deleteOurClient = async (req, res) => {
   try {
     const ourclient = await OurClient.findByIdAndDelete(req.query.id);
@@ -180,7 +180,7 @@ exports.deleteOurClient = async (req, res) => {
 
 // @desc      GET BY FRANCHISE
 // @route     GET /api/v1/our-client/get-by-ourclient
-// @access    public
+// @access    private
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;

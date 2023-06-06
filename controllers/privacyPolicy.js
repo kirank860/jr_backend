@@ -3,7 +3,7 @@ const PrivacyPolicy = require("../models/privacyPolicy");
 
 // @desc      CREATE PRIVACY POLICY
 // @route     POST /api/v1/privacy-policy
-// @access    public
+// @access    private
 exports.createPrivacyPolicy = async (req, res, next) => {
   try {
     // Create the PrivacyPolicy object
@@ -33,7 +33,7 @@ exports.createPrivacyPolicy = async (req, res, next) => {
 
 // @desc      GET PRIVACY POLICY
 // @route     GET /api/v1/privacy-policy
-// @access    public
+// @access    private
 exports.getPrivacyPolicy = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -74,7 +74,7 @@ exports.getPrivacyPolicy = async (req, res) => {
 
 // @desc      UPDATE PRIVACY POLICY
 // @route     PUT /api/v1/privacy-policy
-// @access    public
+// @access    private
 exports.updatePrivacyPolicy = async (req, res) => {
   try {
     const { body, query } = req;
@@ -103,7 +103,7 @@ exports.updatePrivacyPolicy = async (req, res) => {
 
 // @desc      DELETE PRIVACY POLICY
 // @route     DELETE /api/v1/privacy-policy
-// @access    public
+// @access    private
 exports.deletePrivacyPolicy = async (req, res) => {
   try {
     const privacyPolicy = await PrivacyPolicy.findByIdAndDelete(req.query.id);
@@ -130,7 +130,7 @@ exports.deletePrivacyPolicy = async (req, res) => {
 
 // @desc      GET BY FRANCHISE
 // @route     GET /api/v1/privacy-policy/get-by-privacypolicy
-// @access    public
+// @access    private
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;

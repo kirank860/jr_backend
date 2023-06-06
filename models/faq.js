@@ -4,15 +4,12 @@ const FaqSchema = new mongoose.Schema(
   {
     question: {
       type: String,
-      required: true,
     },
     answer: {
       type: String,
-      required: true,
     },
     link: {
       type: String,
-      required: true,
     },
     franchise: {
       type: mongoose.Schema.Types.ObjectId,

@@ -8,52 +8,17 @@ const imageType = "image";
 
 // @desc      CREATE CONTACT US
 // @route     POST /api/v1/contact-us
-// @access    public
-exports.createContactUs = async (req, res, next) => {
+// @access    private
+exports.createContactUs = async (req, res) => {
   try {
-    const multerUpload = upload(DIR, imageType);
-    multerUpload(req, res, async function (err) {
-      if (err) {
-        return res.status(400).json({
-          success: false,
-          message: err.message,
-        });
-      }
-
-      const url = req.protocol + "://" + req.get("host");
-
-      // Create the Contact us object
-      const contactUs = {
-        title: req.body.title,
-        subTitle: req.body.subTitle,
-        description: req.body.description,
-        image: url + "/images/" + req.file.filename,
-        primaryAddress: req.body.primaryAddress,
-        secondaryAddress: req.body.secondaryAddress,
-        primaryPhone: req.body.primaryPhone,
-        secondaryPhone: req.body.secondaryPhone,
-        primaryEmail: req.body.primaryEmail,
-        secondaryEmail: req.body.secondaryEmail,
-        locationUrl: req.body.locationUrl,
-        franchise: req.body.franchise,
-      };
-
-      if (req.file.size / (1024 * 1024) > allowed_file_size) {
-        return res.status(401).json({
-          success: false,
-          message: "Image too large",
-        });
-      }
-
-      // Save the Contact us
-      const newContactUs = await ContactUs.create(contactUs);
-
-      res.status(201).json({
-        success: true,
-        message: "Contact us added successfully",
-        data: newContactUs,
-      });
+    // console.log(req.body)
+    const newContactUs = await ContactUs.create(req.body);
+    res.status(201).json({
+      success: true,
+      message: "Contact us added successfully",
+      data: newContactUs,
     });
+
   } catch (err) {
     console.log("Error:", err);
     res.status(500).json({
@@ -66,7 +31,7 @@ exports.createContactUs = async (req, res, next) => {
 
 // @desc      GET CONTACT US
 // @route     GET /api/v1/contact-us
-// @access    public
+// @access    private
 exports.getContactUs = async (req, res) => {
   try {
     const { id, skip, limit, searchkey } = req.query;
@@ -78,9 +43,22 @@ exports.getContactUs = async (req, res) => {
         response,
       });
     }
-    const query = searchkey
-      ? { ...req.filter, title: { $regex: searchkey, $options: "i" } }
-      : req.filter;
+
+    const query = {
+      ...req.filter,
+      ...(searchkey && {
+        $or: [
+          { title: { $regex: searchkey, $options: "i" } },
+          { subTitle: { $regex: searchkey, $options: "i" } },
+          { primaryPhone: { $regex: searchkey, $options: "i" } },
+          { secondaryPhone: { $regex: searchkey, $options: "i" } },
+          { primaryEmail: { $regex: searchkey, $options: "i" } },
+          { secondaryEmail: { $regex: searchkey, $options: "i" } },
+          { locationUrl: { $regex: searchkey, $options: "i" } },
+        ],
+      }),
+    };
+
     const [totalCount, filterCount, data] = await Promise.all([
       parseInt(skip) === 0 && ContactUs.countDocuments(),
       parseInt(skip) === 0 && ContactUs.countDocuments(query),
@@ -108,7 +86,7 @@ exports.getContactUs = async (req, res) => {
 
 // @desc      UPDATE CONTACT US
 // @route     PUT /api/v1/contact-us
-// @access    public
+// @access    private
 exports.updateContactUs = async (req, res) => {
   try {
     const multerUpload = upload(DIR, imageType);
@@ -133,10 +111,13 @@ exports.updateContactUs = async (req, res) => {
 
 
       const updateFields = {
+        pageTitle: body.pageTitle,
+        pageSubTitle: body.pageSubTitle,
+        bannerImage: file ? url + "/images/" + file.filename : undefined,
         title: body.title,
         subTitle: body.subTitle,
         description: body.description,
-        image: file ? url + "/images/" + file.filename : undefined,
+        contactusImage: file ? url + "/images/" + file.filename : undefined,
         primaryAddress: body.primaryAddress,
         secondaryAddress: body.secondaryAddress,
         primaryPhone: body.primaryPhone,
@@ -154,7 +135,7 @@ exports.updateContactUs = async (req, res) => {
         });
       }
 
-      const response = await ContactUs.findByIdAndUpdate(id, updateFields);
+      const response = await ContactUs.findByIdAndUpdate(body.id, updateFields);
 
       res.status(201).json({
         message: "Successfully updated contact us",
@@ -172,7 +153,7 @@ exports.updateContactUs = async (req, res) => {
 
 // @desc      DELETE CONTACT US
 // @route     DELETE /api/v1/contact-us
-// @access    public
+// @access    private
 exports.deleteContactUs = async (req, res) => {
   try {
     const contactus = await ContactUs.findByIdAndDelete(req.query.id);
@@ -199,7 +180,7 @@ exports.deleteContactUs = async (req, res) => {
 
 // @desc      GET BY FRANCHISE
 // @route     GET /api/v1/contact-us/get-by-contactus
-// @access    public
+// @access    private
 exports.getByFranchise = async (req, res) => {
   try {
     const { id } = req.query;

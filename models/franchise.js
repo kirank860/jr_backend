@@ -4,39 +4,40 @@ const FranchiseSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+    },
+    userName: {
+      type: String,
+    },
+    password: {
+      type: String,
     },
     location: {
-      type: String,
-      required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "location"
     },
     website: {
       type: String,
-      required: true,
     },
     email: {
       type: String,
-      required: true,
     },
-    phone: {
+    primaryNumber: {
       type: String,
-      required: true,
     },
-    description: {
+    secondaryNumber: {
       type: String,
-      required: true,
     },
-    logo: {
+    remarks: {
       type: String,
-      required: true,
     },
-    primaryColour: {
-      type: String,
-      required: true,
+    subscriptionStartDate: {
+      type: Date,
     },
-    secondaryColour: {
+    subscriptionEndDate: {
+      type: Date,
+    },
+    franchiseImage: {
       type: String,
-      required: true,
     },
   },
   { timestamps: true }

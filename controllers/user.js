@@ -2,7 +2,7 @@ const User = require("../models/user");
 
 // @desc      Create a new user
 // @route     POST /api/v1/user
-// @access    Public
+// @access    private
 exports.createUser = async (req, res) => {
   try {
     const newUser = await User.create(req.body);
@@ -22,7 +22,7 @@ exports.createUser = async (req, res) => {
 
 // @desc      Get all users
 // @route     GET /api/v1/user/get-all-users
-// @access    Public
+// @access    private
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find()
@@ -51,7 +51,7 @@ exports.getAllUsers = async (req, res) => {
 
 // @desc      Get a single user by ID
 // @route     GET /api/v1/user/:id
-// @access    Public
+// @access    private
 exports.getUser = async (req, res) => {
   try {
     const user = await User.findById(req.query.id);
@@ -79,7 +79,7 @@ exports.getUser = async (req, res) => {
 
 // @desc      Update a user by ID
 // @route     PUT /api/v1/user/:id
-// @access    Public
+// @access    private
 exports.updateUser = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(req.query.id, req.body, {
@@ -109,7 +109,7 @@ exports.updateUser = async (req, res) => {
 
 // @desc      Delete a user by ID
 // @route     DELETE /api/v1/user/:id
-// @access    Public
+// @access    private
 exports.deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.query.id);

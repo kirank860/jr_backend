@@ -5,6 +5,7 @@ const {
   getLocation,
   updateLocation,
   deleteLocation,
+  select,
 } = require("../controllers/location");
 // Middleware
 const { protect, authorize } = require("../middleware/auth");
@@ -16,5 +17,7 @@ router
   .get(reqFilter, getLocation)
   .put(updateLocation)
   .delete(deleteLocation);
+
+router.get("/select", reqFilter, select);
 
 module.exports = router;
